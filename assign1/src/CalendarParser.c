@@ -27,7 +27,7 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
   }
 
   FILE* fp = fopen(fileName, "r");
-  
+
   // File does not exist
   if (fp == NULL){
     *obj = NULL;
