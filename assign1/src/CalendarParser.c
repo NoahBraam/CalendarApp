@@ -26,6 +26,15 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
     return err;
   }
 
+  FILE* fp = fopen(fileName, "r");
+  
+  // File does not exist
+  if (fp == NULL){
+    *obj = NULL;
+    err = INV_FILE;
+    return err;
+  }
+
   err = OK;
   return err;
 }
