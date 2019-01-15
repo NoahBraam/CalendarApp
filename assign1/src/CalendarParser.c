@@ -39,6 +39,23 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
   return err;
 }
 
+void deleteCalendar(Calendar* obj) {
+  freeList(obj->properties);
+  freeList(obj->alarms);
+  free(obj);
+}
+
+char* printError(ICalErrorCode err) {
+  if (err == OK) {
+    char* str = malloc(sizeof(char) * 3);
+    strcpy(str, "OK");
+    return str;
+  } else {
+    char* str = malloc(sizeof(char) * 13);
+    strcpy(str, "Invalid File");
+    return str;
+  }
+}
 
 //============ Helper Functions =============//
 void deleteEvent(void* toBeDeleted) {
