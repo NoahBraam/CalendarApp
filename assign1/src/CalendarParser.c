@@ -41,7 +41,7 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
 
 void deleteCalendar(Calendar* obj) {
   freeList(obj->properties);
-  freeList(obj->alarms);
+  freeList(obj->events);
   free(obj);
 }
 
