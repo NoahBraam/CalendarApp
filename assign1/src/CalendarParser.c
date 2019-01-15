@@ -7,8 +7,31 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include "CalendarParser.h"
-#include "LinkedListAPI.h" 
+#include "LinkedListAPI.h"
 
+ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
+  ICalErrorCode err;
+
+  // Filename is NULL or too short
+  if (fileName == NULL || strlen(fileName) < 5) {
+    *obj = NULL;
+    err = INV_FILE;
+    return err;
+  }
+
+  // Wrong extention
+  if(strcmp(fileName + strlen(fileName) - 4, ".ics")) {
+    *obj = NULL;
+    err = INV_FILE;
+    return err;
+  }
+
+  err = OK;
+  return err;
+}
+
+
+//============ Helper Functions =============//
 void deleteEvent(void* toBeDeleted) {
   Event* evt = (Event*)toBeDeleted;
   deleteDate(evt->creationDateTime);
