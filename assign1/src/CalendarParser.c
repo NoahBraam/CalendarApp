@@ -60,8 +60,8 @@ char* printError(ICalErrorCode err) {
 //============ Helper Functions =============//
 void deleteEvent(void* toBeDeleted) {
   Event* evt = (Event*)toBeDeleted;
-  deleteDate(evt->&creationDateTime);
-  deleteDate(evt->&startDateTime);
+  deleteDate(&evt->creationDateTime);
+  deleteDate(&evt->startDateTime);
   freeList(evt->properties);
   freeList(evt->alarms);
   free(evt);
