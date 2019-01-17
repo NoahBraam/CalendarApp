@@ -51,7 +51,7 @@ char* printCalendar(const Calendar* obj) {
 
   char* str = malloc(sizeof(char) * (strlen(obj->prodID) + strlen(evtStr) + strlen(propStr) + 50));
   int len = sizeof(str);
-  
+
   snprintf(str, len, "Version: %lf ID: %s Events: %s Props: %s", obj->version, obj->prodID, evtStr, propStr);
 
   free(evtStr);
@@ -63,11 +63,11 @@ char* printCalendar(const Calendar* obj) {
 char* printError(ICalErrorCode err) {
   if (err == OK) {
     char* str = malloc(sizeof(char) * 3);
-    strcpy(str, "OK");
+    strcpy(str, "OK\n");
     return str;
   } else {
     char* str = malloc(sizeof(char) * 13);
-    strcpy(str, "Invalid File");
+    strcpy(str, "Invalid File\n");
     return str;
   }
 }
