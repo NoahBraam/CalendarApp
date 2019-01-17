@@ -45,6 +45,20 @@ void deleteCalendar(Calendar* obj) {
   free(obj);
 }
 
+char* printCalendar(const Calendar* obj) {
+  char* evtStr = toString(obj->events);
+  char* propStr = toString(obj->properties);
+
+  char* str = malloc(sizeof(char) * (strlen(prodID) + strlen(evtStr) + strlen(propStr) + 50));
+
+  snprintf(str, sizeof(str), "Version: %lf ID: %s Events: %s Props: %s", obj->version, obj->prodID, evtStr, propStr);
+
+  free(evtStr);
+  free(propStr);
+
+  return str;
+}
+
 char* printError(ICalErrorCode err) {
   if (err == OK) {
     char* str = malloc(sizeof(char) * 3);
