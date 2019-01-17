@@ -74,8 +74,8 @@ int compareEvents(const void* first, const void* second) {
 char* printEvent(void* toBePrinted) {
   Event* evt = (Event*)toBePrinted;
 
-  char* createTime = printDate(evt->creationDateTime);
-  char* startTime = printDate(evt->startDateTime);
+  char* createTime = printDate(&evt->creationDateTime);
+  char* startTime = printDate(&evt->startDateTime);
   char* propStr = toString(evt->properties);
   char* alarmStr = toString(evt->alarms);
 
