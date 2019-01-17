@@ -15,6 +15,6 @@ parser: src/CalendarParser.c include/CalendarParser.h include/LinkedListAPI.h
 
 test: list parser
 	$(CC) -c $(CFLAGS) src/testmain.c -o bin/testmain.o -I include
-	$(CC) $(CFLAGS) $(LIBS) -o bin/testmain bin/testmain.o -lcal -llist
+	$(CC) $(CFLAGS) $(LIBS) -Wl,-R -Wl,bin/ -o bin/testmain bin/testmain.o -lcal -llist
 clean:
 	rm -rf bin/*.o bin/*.so
