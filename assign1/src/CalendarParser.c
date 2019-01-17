@@ -72,7 +72,32 @@ int compareEvents(const void* first, const void* second) {
 }
 
 char* printEvent(void* toBePrinted) {
-  return "temp";
+  Event* evt = (Event*)toBePrinted;
+
+  char* createTime = printDate(evt->creationDateTime);
+  char* startTime = printDate(evt->startDateTime);
+  char* propStr = toString(evt->properties);
+  char* alarmStr = toString(evt->alarms);
+
+  char* str = malloc(sizeof(char) * (strlen(createTime) + strlen(startTime) + strlen(propStr) + strlen(alarmStr) + strlen(evt->UID) + 50));
+
+  strcpy(str, "UID: ");
+  strcat(str, evt->UID);
+  strcat(str, " Created: ");
+  strcat(str, createTime);
+  strcat(str, " Start: ");
+  strcat(str, startTime);
+  strcat(str, " Properties: ");
+  strcat(str, propStr);
+  strcat(str, " Alarms: ");
+  strcat(str, alarmStr);
+
+  free(createTime);
+  free(startTime);
+  free(propStr);
+  free(alarmStr);
+
+  return str;
 }
 
 void deleteAlarm(void* toBeDeleted) {
@@ -87,7 +112,19 @@ int compareAlarms(const void* first, const void* second) {
 }
 
 char* printAlarm(void* toBePrinted) {
-  return "temp";
+  Alarm* alarm = (Alarm*)toBePrinted;
+  char* propStr = toString(alarm->properties);
+
+  char* str = malloc(sizeof(char) * (strlen(propStr) + strlen(alarm->action) + strlen(alarm->trigger) + 25));
+  strcpy(str, "Action: ");
+  strcat(str, alarm->action);
+  strcat(str, " Trigger: ");
+  strcat(str, alarm->trigger);
+  strcat(str, " Props: ");
+  strcat(str, propStr);
+
+  free(propStr);
+  return str;
 }
 
 void deleteProperty(void* toBeDeleted) {
@@ -101,7 +138,12 @@ int compareProperties(const void* first, const void* second) {
 }
 
 char* printProperty(void* toBePrinted) {
-  return "Temp";
+  Property* prop = (Property*)toBePrinted;
+  char* str = malloc(sizeof(char) * (strlen(prop->propName) + strlen(prop->propDescr) + 4));
+  strcpy(str, prop->propName);
+  strcat(str, ": ");
+  strcat(str, prop->propDescr);
+  return str;
 }
 
 void deleteDate(void* toBeDeleted) {
