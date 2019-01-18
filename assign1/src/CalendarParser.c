@@ -34,20 +34,31 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
     err = INV_FILE;
     return err;
   }
+  char cur;
+  int lineStart = 0, lineEnd = 0;
+  while ((cur = fgetc(fp)) != EOF) {
+    
+    fseek(fp, lineEnd, SEEK_SET);
+    lineStart = ftell(fp);
+
+    while ((cur = fgetc(fp)) != '\n');
+    lineEnd = ftell(fp);
+    int len = lineEnd - lineStart;
+    char* line = malloc(sizeof(char) * len);
+
+    fseek(fp, lineStart, SEEK_SET);
+
+    fgets(line, len, fp);
+    line[strlen(line)] = '\0';
+
+    printf("%s\n", line);
+    free(line);
+
+    fseek(fp, lineEnd, SEEK_SET);
+  }
 
   err = OK;
   return err;
-
-  char cur;
-
-  while ((cur = fgetc(fp)) != EOF) {
-    long lineStart = ftell(fp);
-    while ((cur = fgetc(fp)) != '\n');
-
-    long lineEnd = ftell(fp);
-
-    char* line = malloc(sizeof(char) * (lineEnd - lineStart));
-  }
 }
 
 void deleteCalendar(Calendar* obj) {
