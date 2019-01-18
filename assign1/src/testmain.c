@@ -7,7 +7,7 @@ int main(int argc, char** argv) {
 
   Calendar* cal;
 
-  char* err = printError(createCalendar("thisisatest.ics", &cal));
+  char* err = printError(createCalendar("wikipedia1.ics", &cal));
 
   printf("%s", err);
 
