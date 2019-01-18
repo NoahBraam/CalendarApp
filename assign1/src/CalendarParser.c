@@ -8,6 +8,7 @@
 #include <ctype.h>
 #include "CalendarParser.h"
 #include "LinkedListAPI.h"
+#include "CalendarUtils.h"
 
 ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
   ICalErrorCode err;
@@ -37,26 +38,43 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
   char cur;
   int lineStart = 0, lineEnd = 0;
   while ((cur = fgetc(fp)) != EOF) {
-    
+    // Start Read Line //
     fseek(fp, lineEnd, SEEK_SET);
     lineStart = ftell(fp);
-
-    while ((cur = fgetc(fp)) != '\n');
-    lineEnd = ftell(fp);
+    lineEnd = readLine(fp);
     int len = lineEnd - lineStart;
+
     char* line = malloc(sizeof(char) * len);
 
     fseek(fp, lineStart, SEEK_SET);
-
     fgets(line, len, fp);
-    line[strlen(line)] = '\0';
 
+    line = fixLine(line);
     printf("%s\n", line);
-    free(line);
-
     fseek(fp, lineEnd, SEEK_SET);
-  }
+    // End Read Line //
 
+    // Start Handle Line //
+    if (startsWith(line, "BEGIN:")) {
+      printf("\n START \n");
+      if (endsWith(line, "VCALENDAR")) {
+        printf("\n Calendar \n\n");
+      } else {
+        printf("\n smth else \n\n");
+      }
+
+    } else if (startsWith(line, "END:")) {
+      printf("\n END \n");
+      if (endsWith(line, "VCALENDAR")) {
+        printf("\n Calendar \n\n");
+      } else {
+        printf("\n smth else \n\n");
+      }
+
+    }
+    free(line);
+  }
+  fclose(fp);
   err = OK;
   return err;
 }
