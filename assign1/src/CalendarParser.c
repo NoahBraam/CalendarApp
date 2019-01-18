@@ -37,6 +37,17 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
 
   err = OK;
   return err;
+
+  char cur;
+
+  while ((cur = fgetc(fp)) != EOF) {
+    long lineStart = ftell(fp);
+    while ((cur = fgetc(fp)) != '\n');
+
+    long lineEnd = ftell(fp);
+
+    char* line = malloc(sizeof(char) * (lineEnd - lineStart));
+  }
 }
 
 void deleteCalendar(Calendar* obj) {
