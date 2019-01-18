@@ -1,10 +1,29 @@
+/**
+ * Noah Braam
+ * 0960202
+ */
 #include "CalendarUtils.h"
+
+Calendar* initCal(char* (*printFunction1)(void* toBePrinted),void (*deleteFunction1)(void* toBeDeleted),int (*compareFunction1)(const void* first,const void* second), char* (*printFunction2)(void* toBePrinted),void (*deleteFunction2)(void* toBeDeleted),int (*compareFunction2)(const void* first,const void* second)) {
+  Calendar* cal = malloc(sizeof(Calendar));
+  cal->events = initializeList(printFunction1, deleteFunction1, compareFunction1);
+  cal->properties = initializeList(printFunction2, deleteFunction2, compareFunction2);
+  return cal;
+}
+
+Event* initEvent(char* (*printFunction1)(void* toBePrinted),void (*deleteFunction1)(void* toBeDeleted),int (*compareFunction1)(const void* first,const void* second), char* (*printFunction2)(void* toBePrinted),void (*deleteFunction2)(void* toBeDeleted),int (*compareFunction2)(const void* first,const void* second)) {
+  Event* evt = malloc(sizeof(Event));
+  evt->properties = initializeList(printFunction1, deleteFunction1, compareFunction1);
+  evt->alarms = initializeList(printFunction2, deleteFunction2, compareFunction2);
+  return evt;
+}
 
 int readLine(FILE* fp) {
   char cur;
   // Read a line
   while ((cur = fgetc(fp)) != '\n');
   int endLine = ftell(fp);
+  // Handle line folding
   if ((cur = fgetc(fp)) == ' ' || cur == '\t') {
     endLine = readLine(fp);
   }
@@ -16,6 +35,7 @@ char* fixLine(char* line) {
   int len = strlen(line);
 
   for (int i = 0; i<len; i++) {
+    // Deals with folding... sorta
     if (line[i] == '\n' && i != len-1) {
       line[i] = ' ';
       line[i+1] = ' ';

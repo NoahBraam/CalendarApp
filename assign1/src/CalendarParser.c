@@ -35,9 +35,19 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
     err = INV_FILE;
     return err;
   }
+
   char cur;
   int lineStart = 0, lineEnd = 0;
+  bool endCal = false;
+  Calendar* tmpCal;
+  Event* tmpEvent;
   while ((cur = fgetc(fp)) != EOF) {
+    // Make sure calendar isn't done
+    if (endCal) {
+      *obj = NULL;
+      err = INV_FILE;
+      return err;
+    }
     // Start Read Line //
     fseek(fp, lineEnd, SEEK_SET);
     lineStart = ftell(fp);
@@ -52,29 +62,32 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
     line = fixLine(line);
     printf("%s\n", line);
     fseek(fp, lineEnd, SEEK_SET);
-    // End Read Line //
+    // ======== End Read Line ======== //
 
-    // Start Handle Line //
+    // ======== Start Handle Line ======== //
     if (startsWith(line, "BEGIN:")) {
-      printf("\n START \n");
       if (endsWith(line, "VCALENDAR")) {
-        printf("\n Calendar \n\n");
+        tmpCal = initCal(&printEvent, &deleteEvent, &compareEvents, &printProperty, &deleteProperty, &compareProperties);
+      } else if (endsWith(line, "VEVENT")) {
+        tmpEvent = initEvent(&printProperty, &deleteProperty, &compareProperties, &printAlarm, &deleteAlarm, &compareAlarms);
       } else {
-        printf("\n smth else \n\n");
+
       }
 
     } else if (startsWith(line, "END:")) {
-      printf("\n END \n");
       if (endsWith(line, "VCALENDAR")) {
-        printf("\n Calendar \n\n");
+        endCal = true;
+      } else if (endsWith(line, "VEVENT")) {
+        insertFront(tmpCal->events, tmpEvent);
       } else {
-        printf("\n smth else \n\n");
+
       }
 
     }
     free(line);
   }
   fclose(fp);
+  *obj = tmpCal;
   err = OK;
   return err;
 }
@@ -102,7 +115,7 @@ char* printCalendar(const Calendar* obj) {
 
 char* printError(ICalErrorCode err) {
   if (err == OK) {
-    char* str = malloc(sizeof(char) * 3);
+    char* str = malloc(sizeof(char) * 4);
     strcpy(str, "OK\n");
     return str;
   } else {
@@ -202,7 +215,6 @@ char* printProperty(void* toBePrinted) {
 }
 
 void deleteDate(void* toBeDeleted) {
-  free(toBeDeleted);
 }
 
 int compareDates(const void* first, const void* second) {
