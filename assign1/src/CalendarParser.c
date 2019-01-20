@@ -127,6 +127,9 @@ char* printError(ICalErrorCode err) {
 
 //============ Helper Functions =============//
 void deleteEvent(void* toBeDeleted) {
+  if (toBeDeleted == NULL) {
+    return;
+  }
   Event* evt = (Event*)toBeDeleted;
   deleteDate(&evt->creationDateTime);
   deleteDate(&evt->startDateTime);
@@ -140,6 +143,9 @@ int compareEvents(const void* first, const void* second) {
 }
 
 char* printEvent(void* toBePrinted) {
+  if (toBePrinted == NULL) {
+    return NULL;
+  }
   Event* evt = (Event*)toBePrinted;
 
   char* createTime = printDate(&evt->creationDateTime);
@@ -169,6 +175,9 @@ char* printEvent(void* toBePrinted) {
 }
 
 void deleteAlarm(void* toBeDeleted) {
+  if (toBeDeleted == NULL) {
+    return;
+  }
   Alarm* alarm = (Alarm*)toBeDeleted;
   free(alarm->trigger);
   freeList(alarm->properties);
@@ -180,6 +189,9 @@ int compareAlarms(const void* first, const void* second) {
 }
 
 char* printAlarm(void* toBePrinted) {
+  if (toBePrinted == NULL) {
+    return NULL;
+  }
   Alarm* alarm = (Alarm*)toBePrinted;
   char* propStr = toString(alarm->properties);
 
@@ -196,6 +208,9 @@ char* printAlarm(void* toBePrinted) {
 }
 
 void deleteProperty(void* toBeDeleted) {
+  if (toBeDeleted == NULL) {
+    return;
+  }
   Property* prop = (Property*)toBeDeleted;
   free(prop->propDescr);
   free(prop);
@@ -206,6 +221,9 @@ int compareProperties(const void* first, const void* second) {
 }
 
 char* printProperty(void* toBePrinted) {
+  if (toBePrinted == NULL) {
+    return NULL;
+  }
   Property* prop = (Property*)toBePrinted;
   char* str = malloc(sizeof(char) * (strlen(prop->propName) + strlen(prop->propDescr) + 4));
   strcpy(str, prop->propName);
