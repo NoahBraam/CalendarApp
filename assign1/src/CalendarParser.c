@@ -209,22 +209,18 @@ char* printEvent(void* toBePrinted) {
   Event* evt = (Event*)toBePrinted;
 
   char* createTime = printDate(&evt->creationDateTime);
+  int createLen = strlen(createTime);
   char* startTime = printDate(&evt->startDateTime);
+  int startLen = strlen(startTime);
   char* propStr = toString(evt->properties);
+  int propLen = strlen(propStr);
   char* alarmStr = toString(evt->alarms);
+  int alarmLen = strlen(alarmStr);
 
-  char* str = malloc(sizeof(char) * (strlen(createTime) + strlen(startTime) + strlen(propStr) + strlen(alarmStr) + strlen(evt->UID) + 50));
+  int len = createLen+startLen+propLen+alarmLen+100;
+  char* str = malloc(sizeof(char) * len);
 
-  strcpy(str, "UID: ");
-  strcat(str, evt->UID);
-  strcat(str, " Created: ");
-  strcat(str, createTime);
-  strcat(str, " Start: ");
-  strcat(str, startTime);
-  strcat(str, " Properties: ");
-  strcat(str, propStr);
-  strcat(str, " Alarms: ");
-  strcat(str, alarmStr);
+  snprintf(str, len, "UID: %s\nCreated: %s\nStart: %s\nProperties: %s\nAlarms: %s\n", evt->UID, createTime, startTime, propStr, alarmStr);
 
   free(createTime);
   free(startTime);
@@ -254,14 +250,11 @@ char* printAlarm(void* toBePrinted) {
   }
   Alarm* alarm = (Alarm*)toBePrinted;
   char* propStr = toString(alarm->properties);
+  int len = strlen(propStr) + strlen(alarm->action) +strlen(alarm->trigger) +50;
 
-  char* str = malloc(sizeof(char) * (strlen(propStr) + strlen(alarm->action) + strlen(alarm->trigger) + 25));
-  strcpy(str, "Action: ");
-  strcat(str, alarm->action);
-  strcat(str, " Trigger: ");
-  strcat(str, alarm->trigger);
-  strcat(str, " Props: ");
-  strcat(str, propStr);
+  char* str = malloc(sizeof(char) * len);
+
+  snprintf(str, len, "Action: %s\nTrigger: %s\nProperties: %s\n", alarm->action, alarm->trigger, propStr);
 
   free(propStr);
   return str;
@@ -284,11 +277,11 @@ char* printProperty(void* toBePrinted) {
     return NULL;
   }
   Property* prop = (Property*)toBePrinted;
-  char* str = malloc(sizeof(char) * (strlen(prop->propName) + strlen(prop->propDescr) + 4));
-  strcpy(str, prop->propName);
-  strcat(str, ": ");
-  strcat(str, prop->propDescr);
-  strcat(str, "\n");
+  int len = strlen(prop->propName) + strlen(prop->propDescr) + 4;
+  char* str = malloc(sizeof(char) * len);
+
+  snprintf(str, len, "%s: %s\n", prop->propName, prop->propDescr);
+
   return str;
 }
 
