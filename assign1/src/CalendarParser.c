@@ -129,6 +129,8 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
         err = INV_FILE;
         return err;
       }
+    } else if(startsWith(line, ";")) {
+      // Comment, do nothing
     } else {
       // default extra property...
       if (tmpCal == NULL) {
