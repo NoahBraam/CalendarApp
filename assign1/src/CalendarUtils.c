@@ -29,17 +29,36 @@ Property* createProperty(char* line) {
 }
 
 // ======== String Helper Functs ======== //
-int readLine(FILE* fp) {
+char* readLine(FILE* fp) {
+  int lineStart, lineEnd;
+  lineStart = ftell(fp) -1;
   char cur;
   // Read a line
   while ((cur = fgetc(fp)) != '\n');
-  int endLine = ftell(fp);
+  lineEnd = ftell(fp);
+  int len = lineEnd - lineStart-1;
+  char* line = malloc(sizeof(char) * len);
+
+  fseek(fp, lineStart, SEEK_SET);
+  fgets(line, len, fp);
+
+  fseek(fp, lineEnd, SEEK_SET);
+  char* newLine;
   // Handle line folding
   if ((cur = fgetc(fp)) == ' ' || cur == '\t') {
-    endLine = readLine(fp);
+    printf("Folded\n");
+    newLine = readLine(fp);
+    printf("New str\n");
+    char* tmpLine = line;
+    line = malloc(sizeof(char) * (len + strlen(newLine)));
+    snprintf(line, len + strlen(newLine), "%s%s", tmpLine, newLine);
+    free(tmpLine);
+    free(newLine);
+  } else {
+      fseek(fp, lineEnd, SEEK_SET);
   }
 
-  return endLine;
+  return line;
 }
 
 char* fixLine(char* line) {

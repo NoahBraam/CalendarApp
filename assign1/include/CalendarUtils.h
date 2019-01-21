@@ -16,7 +16,7 @@ Calendar* initCal(char* (*printFunction1)(void* toBePrinted),void (*deleteFuncti
 Event* initEvent(char* (*printFunction1)(void* toBePrinted),void (*deleteFunction1)(void* toBeDeleted),int (*compareFunction1)(const void* first,const void* second), char* (*printFunction2)(void* toBePrinted),void (*deleteFunction2)(void* toBeDeleted),int (*compareFunction2)(const void* first,const void* second));
 Property* createProperty(char* line);
 
-int readLine(FILE* fp);
+char* readLine(FILE* fp);
 char* fixLine(char* line);
 bool startsWith(char* str, char* search);
 bool endsWith(char* str, char* search);

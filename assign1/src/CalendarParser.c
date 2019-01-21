@@ -51,19 +51,8 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
       return err;
     }
     // Start Read Line //
-    fseek(fp, lineEnd, SEEK_SET);
-    lineStart = ftell(fp);
-    lineEnd = readLine(fp);
-    int len = lineEnd - lineStart;
-
-    char* line = malloc(sizeof(char) * len);
-
-    fseek(fp, lineStart, SEEK_SET);
-    fgets(line, len, fp);
-
-    line = fixLine(line);
+    char* line = readLine(fp);
     printf("%s\n", line);
-    fseek(fp, lineEnd, SEEK_SET);
     // ======== End Read Line ======== //
 
     // ======== Start Handle Line ======== //
