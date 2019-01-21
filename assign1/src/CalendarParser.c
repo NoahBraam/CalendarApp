@@ -72,7 +72,7 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
         if (tmpCal == NULL) {
           tmpCal = initCal(&printEvent, &deleteEvent, &compareEvents, &printProperty, &deleteProperty, &compareProperties);
         } else {
-          // TODO: actual error code.
+          //TODO: actual error code.
           *obj = NULL;
           err = INV_FILE;
           return err;
@@ -95,7 +95,7 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
       }
     } else if (startsWith(line, "VERSION:")) {
       if (tmpCal == NULL) {
-        // TODO: real error code
+        //TODO: real error code
         *obj = NULL;
         err = INV_FILE;
         return err;
@@ -106,14 +106,14 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
         tmpCal->version = atof(version);
       } else {
         deleteCalendar(tmpCal);
-        // TODO: real error code
+        //TODO: real error code
         *obj = NULL;
         err = INV_FILE;
         return err;
       }
     } else if (startsWith(line, "PRODID:")) {
       if (tmpCal == NULL) {
-        // TODO: error code
+        //TODO: error code
         *obj = NULL;
         err = INV_FILE;
         return err;
@@ -125,7 +125,7 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
       } else {
         deleteCalendar(tmpCal);
         *obj=NULL;
-        // TODO: error codes
+        //TODO: error codes
         err = INV_FILE;
         return err;
       }
@@ -134,7 +134,7 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
     } else {
       // default extra property...
       if (tmpCal == NULL) {
-        // TODO: error code
+        //TODO: error code
         *obj = NULL;
         err = INV_FILE;
         return err;
