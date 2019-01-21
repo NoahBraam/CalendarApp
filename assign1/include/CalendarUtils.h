@@ -17,7 +17,6 @@ Event* initEvent(char* (*printFunction1)(void* toBePrinted),void (*deleteFunctio
 Property* createProperty(char* line);
 
 char* readLine(FILE* fp);
-char* fixLine(char* line);
 bool startsWith(char* str, char* search);
 bool endsWith(char* str, char* search);
 

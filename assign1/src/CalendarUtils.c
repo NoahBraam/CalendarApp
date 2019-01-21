@@ -60,19 +60,6 @@ char* readLine(FILE* fp) {
   return line;
 }
 
-char* fixLine(char* line) {
-  int len = strlen(line);
-
-  for (int i = 0; i<len; i++) {
-    // Deals with folding... sorta
-    if (line[i] == '\n' && i != len-1) {
-      line[i] = ' ';
-      line[i+1] = ' ';
-    }
-  }
-  return line;
-}
-
 bool startsWith(char* str, char* search) {
   bool starts = true;
   int len = strlen(search);
