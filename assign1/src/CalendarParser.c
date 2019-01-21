@@ -88,7 +88,7 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
       if (endsWith(line, "VCALENDAR")) {
         endCal = true;
       } else if (endsWith(line, "VEVENT")) {
-        insertFront(tmpCal->events, tmpEvent);
+        insertBack(tmpCal->events, tmpEvent);
         creatingEvent = false;
       } else {
 
@@ -138,7 +138,7 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
         return err;
       }
       Property* tmpProp = createProperty(line);
-      insertFront(tmpCal->properties, tmpProp);
+      insertBack(tmpCal->properties, tmpProp);
     }
     free(line);
   }
