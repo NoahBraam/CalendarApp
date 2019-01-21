@@ -23,8 +23,31 @@ Event* initEvent(char* (*printFunction1)(void* toBePrinted),void (*deleteFunctio
 
 Property* createProperty(char* line) {
   Property* prop = malloc(sizeof(Property) + sizeof(char) * strlen(line));
-  strcpy(prop->propName, strtok(line, ":"));
-  strcpy(prop->propDescr, strtok(NULL, ":"));
+  char tempName[200];
+  int i = 0;
+  while(1==1) {
+    if (line[i] == ';' || line[i] == ':') {
+      break;
+    }
+    tempName[i] = line[i];
+    i++;
+    if (i == strlen(line)) {
+      free(prop);
+      return NULL;
+    }
+  }
+  tempName[i] = '\0';
+  int len = strlen(line) - i;
+  char* tempDesc = malloc(sizeof(char) * (len + 1));
+  i++;
+  for(int j=0; j<len; j++) {
+    tempDesc[j] = line[i+j];
+  }
+  tempDesc[len] = '\0';
+  strcpy(prop->propName, tempName);
+  strcpy(prop->propDescr, tempDesc);
+
+  free(tempDesc);
 
   return prop;
 }

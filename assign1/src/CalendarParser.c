@@ -141,7 +141,15 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
         return err;
       }
       Property* tmpProp = createProperty(line);
-      insertBack(tmpCal->properties, tmpProp);
+      if (tmpProp != NULL) {
+        insertBack(tmpCal->properties, tmpProp);
+      } else {
+        //TODO: real error codes
+        deleteCalendar(tmpCal);
+        *obj = NULL;
+        err = INV_FILE;
+        return err;
+      }
     }
     free(line);
   }
