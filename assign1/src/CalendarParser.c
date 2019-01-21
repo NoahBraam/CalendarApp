@@ -37,9 +37,11 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
   }
 
   char cur;
+  const char tok[2] = ":";
   int lineStart = 0, lineEnd = 0;
   bool endCal = false;
-  Calendar* tmpCal;
+  bool creatingEvent = false, creatingAlarm = false;
+  Calendar* tmpCal = NULL;
   Event* tmpEvent;
   while ((cur = fgetc(fp)) != EOF) {
     // Make sure calendar isn't done
@@ -67,9 +69,17 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
     // ======== Start Handle Line ======== //
     if (startsWith(line, "BEGIN:")) {
       if (endsWith(line, "VCALENDAR")) {
-        tmpCal = initCal(&printEvent, &deleteEvent, &compareEvents, &printProperty, &deleteProperty, &compareProperties);
+        if (tmpCal == NULL) {
+          tmpCal = initCal(&printEvent, &deleteEvent, &compareEvents, &printProperty, &deleteProperty, &compareProperties);
+        } else {
+          // TODO: actual error code.
+          *obj = NULL;
+          err = INV_FILE;
+          return err;
+        }
       } else if (endsWith(line, "VEVENT")) {
         tmpEvent = initEvent(&printProperty, &deleteProperty, &compareProperties, &printAlarm, &deleteAlarm, &compareAlarms);
+        creatingEvent = true;
       } else {
 
       }
@@ -79,10 +89,56 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
         endCal = true;
       } else if (endsWith(line, "VEVENT")) {
         insertFront(tmpCal->events, tmpEvent);
+        creatingEvent = false;
       } else {
 
       }
-
+    } else if (startsWith(line, "VERSION:")) {
+      if (tmpCal == NULL) {
+        // TODO: real error code
+        *obj = NULL;
+        err = INV_FILE;
+        return err;
+      }
+      if (tmpCal->version == 0.0) {
+        char* version = strtok(line, tok);
+        version = strtok(NULL, tok);
+        tmpCal->version = atof(version);
+      } else {
+        deleteCalendar(tmpCal);
+        // TODO: real error code
+        *obj = NULL;
+        err = INV_FILE;
+        return err;
+      }
+    } else if (startsWith(line, "PRODID:")) {
+      if (tmpCal == NULL) {
+        // TODO: error code
+        *obj = NULL;
+        err = INV_FILE;
+        return err;
+      }
+      if (strcmp(tmpCal->prodID, "temp") == 0) {
+        char* prodID = strtok(line, tok);
+        prodID = strtok(NULL, tok);
+        strcpy(tmpCal->prodID, prodID);
+      } else {
+        deleteCalendar(tmpCal);
+        *obj=NULL;
+        // TODO: error codes
+        err = INV_FILE;
+        return err;
+      }
+    } else {
+      // default extra property...
+      if (tmpCal == NULL) {
+        // TODO: error code
+        *obj = NULL;
+        err = INV_FILE;
+        return err;
+      }
+      Property* tmpProp = createProperty(line);
+      insertFront(tmpCal->properties, tmpProp);
     }
     free(line);
   }
@@ -99,15 +155,19 @@ void deleteCalendar(Calendar* obj) {
 }
 
 char* printCalendar(const Calendar* obj) {
-  char* evtStr = toString(obj->events);
+  //char* evtStr = toString(obj->events);
+  int len = 100;
   char* propStr = toString(obj->properties);
+  int propLen = strlen(propStr);
+  len+=propLen;
 
-  char* str = malloc(sizeof(char) * (strlen(obj->prodID) + strlen(evtStr) + strlen(propStr) + 50));
-  int len = sizeof(str);
+  //char* str = malloc(sizeof(char) * (strlen(obj->prodID) + strlen(evtStr) + strlen(propStr) + 50));
+  //int len = sizeof(str);
 
-  snprintf(str, len, "Version: %lf ID: %s Events: %s Props: %s", obj->version, obj->prodID, evtStr, propStr);
-
-  free(evtStr);
+  //snprintf(str, len, "Version: %lf ID: %s Events: %s Props: %s", obj->version, obj->prodID, evtStr, propStr);
+  char* str = malloc(sizeof(char) * len);
+  snprintf(str, len, "Version: %.2lf\nProdID: %s\nProperties: %s", obj->version, obj->prodID, propStr);
+  //free(evtStr);
   free(propStr);
 
   return str;
@@ -212,7 +272,6 @@ void deleteProperty(void* toBeDeleted) {
     return;
   }
   Property* prop = (Property*)toBeDeleted;
-  free(prop->propDescr);
   free(prop);
 }
 
@@ -229,6 +288,7 @@ char* printProperty(void* toBePrinted) {
   strcpy(str, prop->propName);
   strcat(str, ": ");
   strcat(str, prop->propDescr);
+  strcat(str, "\n");
   return str;
 }
 

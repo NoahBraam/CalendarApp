@@ -8,6 +8,8 @@ Calendar* initCal(char* (*printFunction1)(void* toBePrinted),void (*deleteFuncti
   Calendar* cal = malloc(sizeof(Calendar));
   cal->events = initializeList(printFunction1, deleteFunction1, compareFunction1);
   cal->properties = initializeList(printFunction2, deleteFunction2, compareFunction2);
+  cal->version = 0.0;
+  strcpy(cal->prodID, "temp");
   return cal;
 }
 
@@ -18,6 +20,15 @@ Event* initEvent(char* (*printFunction1)(void* toBePrinted),void (*deleteFunctio
   return evt;
 }
 
+Property* createProperty(char* line) {
+  Property* prop = malloc(sizeof(Property) + sizeof(char) * strlen(line));
+  strcpy(prop->propName, strtok(line, ":"));
+  strcpy(prop->propDescr, strtok(NULL, ":"));
+
+  return prop;
+}
+
+// ======== String Helper Functs ======== //
 int readLine(FILE* fp) {
   char cur;
   // Read a line

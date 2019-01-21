@@ -10,7 +10,9 @@ int main(int argc, char** argv) {
   printf("%s\n", err);
   free(err);
   if (cal != NULL) {
-    printf("Deleting Cal\n");
+    char* calS = printCalendar(cal);
+    printf("%s\n", calS);
+    free(calS);
     deleteCalendar(cal);
   }
 
