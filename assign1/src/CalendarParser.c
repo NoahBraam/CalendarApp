@@ -38,7 +38,6 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
 
   char cur;
   const char tok[2] = ":";
-  int lineStart = 0, lineEnd = 0;
   bool endCal = false;
   bool creatingEvent = false, creatingAlarm = false;
   Calendar* tmpCal = NULL;
@@ -120,6 +119,19 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
       }
     } else if(startsWith(line, ";")) {
       // Comment, do nothing
+    } else if(startsWith(line, "UID:")) {
+      if (!creatingEvent || strcmp(tmpEvent->UID, "temp") != 0) {
+        //TODO: error code
+        deleteEvent(tmpEvent);
+        deleteCalendar(tmpCal);
+        *obj = NULL;
+        err = INV_FILE;
+        return err;
+      } else {
+        char* uid = strtok(line, tok);
+        uid = strtok(NULL,tok);
+        strcpy(tmpEvent->UID, uid);
+      }
     } else {
       // default extra property...
       if (tmpCal == NULL) {
@@ -146,8 +158,10 @@ void deleteCalendar(Calendar* obj) {
 }
 
 char* printCalendar(const Calendar* obj) {
-  //char* evtStr = toString(obj->events);
   int len = 100;
+  char* evtStr = toString(obj->events);
+  int evtLen = strlen(evtStr);
+  len+=evtLen;
   char* propStr = toString(obj->properties);
   int propLen = strlen(propStr);
   len+=propLen;
@@ -157,8 +171,8 @@ char* printCalendar(const Calendar* obj) {
 
   //snprintf(str, len, "Version: %lf ID: %s Events: %s Props: %s", obj->version, obj->prodID, evtStr, propStr);
   char* str = malloc(sizeof(char) * len);
-  snprintf(str, len, "Version: %.2lf\nProdID: %s\nProperties: %s", obj->version, obj->prodID, propStr);
-  //free(evtStr);
+  snprintf(str, len, "Version: %.2lf\nProdID: %s\nEvents: %s\nProperties: %s", obj->version, obj->prodID, evtStr, propStr);
+  free(evtStr);
   free(propStr);
 
   return str;

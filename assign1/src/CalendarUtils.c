@@ -17,6 +17,7 @@ Event* initEvent(char* (*printFunction1)(void* toBePrinted),void (*deleteFunctio
   Event* evt = malloc(sizeof(Event));
   evt->properties = initializeList(printFunction1, deleteFunction1, compareFunction1);
   evt->alarms = initializeList(printFunction2, deleteFunction2, compareFunction2);
+  strcpy(evt->UID, "temp");
   return evt;
 }
 
@@ -46,9 +47,7 @@ char* readLine(FILE* fp) {
   char* newLine;
   // Handle line folding
   if ((cur = fgetc(fp)) == ' ' || cur == '\t') {
-    printf("Folded\n");
     newLine = readLine(fp);
-    printf("New str\n");
     char* tmpLine = line;
     line = malloc(sizeof(char) * (len + strlen(newLine)));
     snprintf(line, len + strlen(newLine), "%s%s", tmpLine, newLine);
