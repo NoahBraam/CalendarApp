@@ -215,7 +215,7 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
 
 void deleteCalendar(Calendar* obj) {
   if (obj == NULL) {
-    return NULL;
+    return;
   }
   if (obj->properties!=NULL) {
     freeList(obj->properties);

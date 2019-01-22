@@ -105,7 +105,8 @@ char* readLine(FILE* fp) {
 bool startsWith(char* str, char* search) {
   bool starts = true;
   int len = strlen(search);
-
+  if (strlen(str) < strlen(search))
+    return false;
   for (int i = 0; i<len; i++) {
     if (str[i] != search[i]) {
       starts = false;
