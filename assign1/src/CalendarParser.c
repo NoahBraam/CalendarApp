@@ -76,8 +76,18 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
       if (endsWith(line, "VCALENDAR")) {
         endCal = true;
       } else if (endsWith(line, "VEVENT")) {
-        insertBack(tmpCal->events, tmpEvent);
-        creatingEvent = false;
+        if(!validEvent(tmpEvent)) {
+          deleteEvent(tmpEvent);
+          deleteCalendar(tmpCal);
+          //TODO: real error code
+          *obj = NULL;
+          err = INV_FILE;
+          return err;
+        } else {
+          insertBack(tmpCal->events, tmpEvent);
+          creatingEvent = false;
+        }
+
       } else {
 
       }
@@ -341,7 +351,7 @@ char* printDate(void* toBePrinted) {
   }
   DateTime* dt = (DateTime*)toBePrinted;
   char* print = malloc(sizeof(char) * 23);
-  strcat(print, (*dt).date);
+  strcpy(print, (*dt).date);
   strcat(print, " ");
   strcat(print, (*dt).time);
 

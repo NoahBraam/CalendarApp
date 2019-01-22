@@ -64,6 +64,13 @@ void handleDTStamp(char* dt, DateTime* toChange) {
   strcpy((*toChange).time, strtok(NULL, "Z"));
 }
 
+bool validEvent(Event* evt) {
+  if (strcmp(evt->creationDateTime.date, "temp") == 0 || strcmp(evt->startDateTime.date, "temp") == 0) {
+    return false;
+  }
+  return true;
+}
+
 // ======== String Helper Functs ======== //
 char* readLine(FILE* fp) {
   int lineStart, lineEnd;
