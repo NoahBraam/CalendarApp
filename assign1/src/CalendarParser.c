@@ -42,6 +42,7 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
   bool creatingEvent = false, creatingAlarm = false;
   Calendar* tmpCal = NULL;
   Event* tmpEvent;
+  Alarm* tmpAlarm;
   while ((cur = fgetc(fp)) != EOF) {
     // Make sure calendar isn't done
     if (endCal) {
@@ -68,6 +69,14 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
       } else if (endsWith(line, "VEVENT")) {
         tmpEvent = initEvent(&printProperty, &deleteProperty, &compareProperties, &printAlarm, &deleteAlarm, &compareAlarms);
         creatingEvent = true;
+      } else if (endsWith(line, "VALARM")) {
+        if (creatingEvent && !creatingAlarm) {
+          tmpAlarm = initAlarm(&printProperty, &deleteProperty, &compareProperties);
+          creatingAlarm = true;
+        } else {
+
+        }
+
       } else {
           Property* tmpProp = createProperty(line);
           if (creatingEvent) {
@@ -192,7 +201,9 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
       }
       Property* tmpProp = createProperty(line);
       if (tmpProp != NULL) {
-        if (creatingEvent) {
+        if (creatingAlarm) {
+          insertBack(tmpAlarm->properties, tmpProp);
+        } else if (creatingEvent) {
           insertBack(tmpEvent->properties, tmpProp);
         } else {
           insertBack(tmpCal->properties, tmpProp);

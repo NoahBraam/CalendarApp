@@ -23,6 +23,14 @@ Event* initEvent(char* (*printFunction1)(void* toBePrinted),void (*deleteFunctio
   return evt;
 }
 
+Alarm* initAlarm(char* (*printFunction1)(void* toBePrinted),void (*deleteFunction1)(void* toBeDeleted),int (*compareFunction1)(const void* first,const void* second)) {
+  Alarm* alarm = malloc(sizeof(Alarm));
+  strcpy(alarm->action, "temp");
+  alarm->trigger = NULL;
+  alarm->properties = initializeList(printFunction1, deleteFunction1, compareFunction1);
+  return alarm;
+}
+
 Property* createProperty(char* line) {
   Property* prop = malloc(sizeof(Property) + sizeof(char) * strlen(line));
   char tempName[200];
