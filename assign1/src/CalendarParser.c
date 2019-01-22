@@ -69,9 +69,13 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
         tmpEvent = initEvent(&printProperty, &deleteProperty, &compareProperties, &printAlarm, &deleteAlarm, &compareAlarms);
         creatingEvent = true;
       } else {
-
+          Property* tmpProp = createProperty(line);
+          if (creatingEvent) {
+            insertBack(tmpEvent->properties, tmpProp);
+          } else {
+            insertBack(tmpCal->properties, tmpProp);
+          }
       }
-
     } else if (startsWith(line, "END:")) {
       if (endsWith(line, "VCALENDAR")) {
         endCal = true;
@@ -88,8 +92,15 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
           creatingEvent = false;
         }
 
-      } else {
+      } else if (endsWith(line, "VALARM")) {
 
+      } else {
+        Property* tmpProp = createProperty(line);
+        if (creatingEvent) {
+          insertBack(tmpEvent->properties, tmpProp);
+        } else {
+          insertBack(tmpCal->properties, tmpProp);
+        }
       }
     } else if (startsWith(line, "VERSION:")) {
       if (tmpCal == NULL) {
@@ -156,7 +167,10 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
         handleDTStamp(dt, &tmpEvent->creationDateTime);
       }
     } else if (startsWith(line, "DTSTART:")) {
-      if (!creatingEvent || strcmp(tmpEvent->startDateTime.date, "temp") != 0) {
+      if (!creatingEvent) {
+        Property* tmpProp = createProperty(line);
+        insertBack(tmpCal->properties, tmpProp);
+      } else if (strcmp(tmpEvent->startDateTime.date, "temp") != 0) {
         //TODO: error code
         deleteEvent(tmpEvent);
         deleteCalendar(tmpCal);

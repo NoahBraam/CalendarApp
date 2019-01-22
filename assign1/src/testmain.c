@@ -6,7 +6,7 @@ int main(int argc, char** argv) {
   printf("Hello world!\n");
 
   Calendar* cal;
-  char* err = printError(createCalendar("wikipedia1.ics", &cal));
+  char* err = printError(createCalendar(argv[1], &cal));
   printf("%s\n", err);
   free(err);
   if (cal != NULL) {
