@@ -246,7 +246,7 @@ char* printError(ICalErrorCode err) {
     strcpy(str, "OK\n");
     return str;
   } else {
-    char* str = malloc(sizeof(char) * 13);
+    char* str = malloc(sizeof(char) * 14);
     strcpy(str, "Invalid File\n");
     return str;
   }
