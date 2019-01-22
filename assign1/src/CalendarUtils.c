@@ -119,6 +119,8 @@ bool startsWith(char* str, char* search) {
 bool endsWith(char* str, char* search) {
   bool ends = true;
   int len = strlen(search);
+  if (strlen(str) < strlen(search))
+    return false;
   for (int i = 0; i<len; i++) {
     if (str[strlen(str)-(len-i)] != search[i]) {
       ends = false;
