@@ -214,12 +214,22 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
 }
 
 void deleteCalendar(Calendar* obj) {
-  freeList(obj->properties);
-  freeList(obj->events);
+  if (obj == NULL) {
+    return NULL;
+  }
+  if (obj->properties!=NULL) {
+    freeList(obj->properties);
+  }
+  if (obj->events != NULL) {
+    freeList(obj->events);
+  }
   free(obj);
 }
 
 char* printCalendar(const Calendar* obj) {
+  if (obj == NULL) {
+    return NULL;
+  }
   int len = 100;
   char* evtStr = toString(obj->events);
   int evtLen = strlen(evtStr);
