@@ -132,6 +132,32 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
         uid = strtok(NULL,tok);
         strcpy(tmpEvent->UID, uid);
       }
+    } else if (startsWith(line, "DTSTAMP:")) {
+      if (!creatingEvent || strcmp(tmpEvent->creationDateTime.date, "temp") != 0) {
+        //TODO: error code
+        deleteEvent(tmpEvent);
+        deleteCalendar(tmpCal);
+        *obj = NULL;
+        err = INV_FILE;
+        return err;
+      } else {
+        char* dt = strtok(line, tok);
+        dt = strtok(NULL, tok);
+        handleDTStamp(dt, &tmpEvent->creationDateTime);
+      }
+    } else if (startsWith(line, "DTSTART:")) {
+      if (!creatingEvent || strcmp(tmpEvent->startDateTime.date, "temp") != 0) {
+        //TODO: error code
+        deleteEvent(tmpEvent);
+        deleteCalendar(tmpCal);
+        *obj = NULL;
+        err = INV_FILE;
+        return err;
+      } else {
+        char* dt = strtok(line, tok);
+        dt = strtok(NULL, tok);
+        handleDTStamp(dt, &tmpEvent->startDateTime);
+      }
     } else {
       // default extra property...
       if (tmpCal == NULL) {
@@ -142,7 +168,11 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
       }
       Property* tmpProp = createProperty(line);
       if (tmpProp != NULL) {
-        insertBack(tmpCal->properties, tmpProp);
+        if (creatingEvent) {
+          insertBack(tmpEvent->properties, tmpProp);
+        } else {
+          insertBack(tmpCal->properties, tmpProp);
+        }
       } else {
         //TODO: real error codes
         deleteCalendar(tmpCal);
@@ -179,7 +209,7 @@ char* printCalendar(const Calendar* obj) {
 
   //snprintf(str, len, "Version: %lf ID: %s Events: %s Props: %s", obj->version, obj->prodID, evtStr, propStr);
   char* str = malloc(sizeof(char) * len);
-  snprintf(str, len, "Version: %.2lf\nProdID: %s\nEvents: %s\nProperties: %s", obj->version, obj->prodID, evtStr, propStr);
+  snprintf(str, len, "Version: %.1lf\nProdID: %s\nEvents: %s\nProperties: %s", obj->version, obj->prodID, evtStr, propStr);
   free(evtStr);
   free(propStr);
 
@@ -311,13 +341,14 @@ char* printDate(void* toBePrinted) {
   }
   DateTime* dt = (DateTime*)toBePrinted;
   char* print = malloc(sizeof(char) * 23);
-  strcat(print, dt->date);
-  strcat(print, dt->time);
+  strcat(print, (*dt).date);
+  strcat(print, " ");
+  strcat(print, (*dt).time);
 
-  if (dt->UTC) {
-    strcat(print, "true");
+  if ((*dt).UTC) {
+    strcat(print, " UTC");
   } else {
-    strcat(print, "false");
+    strcat(print, "");
   }
 
   return print;

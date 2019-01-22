@@ -18,6 +18,8 @@ Event* initEvent(char* (*printFunction1)(void* toBePrinted),void (*deleteFunctio
   evt->properties = initializeList(printFunction1, deleteFunction1, compareFunction1);
   evt->alarms = initializeList(printFunction2, deleteFunction2, compareFunction2);
   strcpy(evt->UID, "temp");
+  strcpy(evt->creationDateTime.date, "temp");
+  strcpy(evt->startDateTime.date, "temp");
   return evt;
 }
 
@@ -50,6 +52,16 @@ Property* createProperty(char* line) {
   free(tempDesc);
 
   return prop;
+}
+
+void handleDTStamp(char* dt, DateTime* toChange) {
+  if (endsWith(dt, "Z")) {
+    (*toChange).UTC = true;
+  } else {
+    (*toChange).UTC = false;
+  }
+  strcpy((*toChange).date, strtok(dt, "T"));
+  strcpy((*toChange).time, strtok(NULL, "Z"));
 }
 
 // ======== String Helper Functs ======== //
