@@ -79,13 +79,25 @@ bool validEvent(Event* evt) {
   return true;
 }
 
+bool validAlarm(Alarm* alarm) {
+  if (alarm == NULL) {
+    return false;
+  }
+  if (strcmp(alarm->action, "temp") == 0 || alarm->trigger == NULL) {
+    return false;
+  }
+  return true;
+}
+
 // ======== String Helper Functs ======== //
 char* readLine(FILE* fp) {
   int lineStart, lineEnd;
   lineStart = ftell(fp) -1;
-  char cur;
+  char cur, prev;
   // Read a line
-  while ((cur = fgetc(fp)) != '\n');
+  while ((cur = fgetc(fp)) != '\n') {
+    prev = cur;
+  }
   lineEnd = ftell(fp);
   int len = lineEnd - lineStart-1;
   char* line = malloc(sizeof(char) * len);
@@ -96,7 +108,7 @@ char* readLine(FILE* fp) {
   fseek(fp, lineEnd, SEEK_SET);
   char* newLine;
   // Handle line folding
-  if ((cur = fgetc(fp)) == ' ' || cur == '\t') {
+  if ((cur = fgetc(fp)) == ' ' || cur == '\t' || prev != '\r') {
     newLine = readLine(fp);
     char* tmpLine = line;
     line = malloc(sizeof(char) * (len + strlen(newLine)));

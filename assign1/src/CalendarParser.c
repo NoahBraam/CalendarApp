@@ -102,7 +102,18 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
         }
 
       } else if (endsWith(line, "VALARM")) {
-
+        if (!validAlarm(tmpAlarm)) {
+          deleteAlarm(tmpAlarm);
+          deleteEvent(tmpEvent);
+          deleteCalendar(tmpCal);
+          //TODO: real error code
+          *obj = NULL;
+          err = INV_FILE;
+          return err;
+        } else {
+          insertBack(tmpEvent->alarms, tmpAlarm);
+          creatingAlarm = false;
+        }
       } else {
         Property* tmpProp = createProperty(line);
         if (creatingEvent) {
@@ -249,10 +260,6 @@ char* printCalendar(const Calendar* obj) {
   int propLen = strlen(propStr);
   len+=propLen;
 
-  //char* str = malloc(sizeof(char) * (strlen(obj->prodID) + strlen(evtStr) + strlen(propStr) + 50));
-  //int len = sizeof(str);
-
-  //snprintf(str, len, "Version: %lf ID: %s Events: %s Props: %s", obj->version, obj->prodID, evtStr, propStr);
   char* str = malloc(sizeof(char) * len);
   snprintf(str, len, "Version: %.1lf\nProdID: %s\nEvents: %s\nProperties: %s", obj->version, obj->prodID, evtStr, propStr);
   free(evtStr);

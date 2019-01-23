@@ -18,6 +18,7 @@ Alarm* initAlarm(char* (*printFunction1)(void* toBePrinted),void (*deleteFunctio
 Property* createProperty(char* line);
 void handleDTStamp(char* dt, DateTime* toChange);
 bool validEvent(Event* evt);
+bool validAlarm(Alarm* alarm);
 
 char* readLine(FILE* fp);
 bool startsWith(char* str, char* search);
