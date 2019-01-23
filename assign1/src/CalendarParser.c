@@ -50,7 +50,9 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
     }
     // Start Read Line //
     char* line = readLine(fp);
-    printf("%s\n", line);
+    if (line == NULL) {
+      break;
+    }
     // ======== End Read Line ======== //
 
     // ======== Start Handle Line ======== //
@@ -275,8 +277,16 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
     free(line);
   }
   fclose(fp);
-
-  if (creatingAlarm) {
+  if (cur != EOF) {
+    err = INV_FILE;
+    deleteCalendar(tmpCal);
+    if (creatingAlarm) {
+      deleteAlarm(tmpAlarm);
+    }
+    if (creatingEvent) {
+      deleteEvent(tmpEvent);
+    }
+  } else if (creatingAlarm) {
     deleteAlarm(tmpAlarm);
     deleteEvent(tmpEvent);
     deleteCalendar(tmpCal);
