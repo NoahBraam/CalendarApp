@@ -202,6 +202,39 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
         dt = strtok(NULL, tok);
         handleDTStamp(dt, &tmpEvent->startDateTime);
       }
+    } else if (startsWith(line, "ACTION:")) {
+      if (!creatingAlarm) {
+
+      } else if (strcmp(tmpAlarm->action, "temp") != 0) {
+        deleteAlarm(tmpAlarm);
+        deleteEvent(tmpEvent);
+        deleteCalendar(tmpCal);
+        //TODO: error code
+        *obj = NULL;
+        err = INV_FILE;
+        return err;
+      } else {
+        char* action = strtok(line, tok);
+        action = strtok(NULL, "");
+        strcpy(tmpAlarm->action, action);
+      }
+    } else if(startsWith(line, "TRIGGER:")){
+      if (!creatingAlarm) {
+
+      } else if (tmpAlarm->trigger != NULL) {
+        deleteAlarm(tmpAlarm);
+        deleteEvent(tmpEvent);
+        deleteCalendar(tmpCal);
+        //TODO: error code
+        *obj = NULL;
+        err = INV_FILE;
+        return err;
+      } else {
+        char* trigger = strtok(line, tok);
+        trigger = strtok(NULL, "");
+        tmpAlarm->trigger = malloc(sizeof(char) * strlen(trigger) + 1);
+        strcpy(tmpAlarm->trigger, trigger);
+      }
     } else {
       // default extra property...
       if (tmpCal == NULL) {
