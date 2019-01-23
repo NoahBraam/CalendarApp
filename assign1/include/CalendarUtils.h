@@ -19,6 +19,7 @@ Property* createProperty(char* line);
 void handleDTStamp(char* dt, DateTime* toChange);
 bool validEvent(Event* evt);
 bool validAlarm(Alarm* alarm);
+ICalErrorCode validCal(Calendar* cal);
 
 char* readLine(FILE* fp);
 bool startsWith(char* str, char* search);

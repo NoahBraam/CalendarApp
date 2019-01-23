@@ -13,16 +13,16 @@
 ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
   ICalErrorCode err;
 
+  // Set to NULL so that we don't need to if there is an error.
+  *obj = NULL;
   // Filename is NULL or too short
   if (fileName == NULL || strlen(fileName) < 5) {
-    *obj = NULL;
     err = INV_FILE;
     return err;
   }
 
   // Wrong extention
   if(strcmp(fileName + strlen(fileName) - 4, ".ics")) {
-    *obj = NULL;
     err = INV_FILE;
     return err;
   }
@@ -31,7 +31,6 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
 
   // File does not exist
   if (fp == NULL){
-    *obj = NULL;
     err = INV_FILE;
     return err;
   }
@@ -46,7 +45,6 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
   while ((cur = fgetc(fp)) != EOF) {
     // Make sure calendar isn't done
     if (endCal) {
-      *obj = NULL;
       err = INV_FILE;
       return err;
     }
@@ -61,8 +59,9 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
         if (tmpCal == NULL) {
           tmpCal = initCal(&printEvent, &deleteEvent, &compareEvents, &printProperty, &deleteProperty, &compareProperties);
         } else {
+          free(line);
+          fclose(fp);
           //TODO: actual error code.
-          *obj = NULL;
           err = INV_FILE;
           return err;
         }
@@ -92,8 +91,9 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
         if(!validEvent(tmpEvent)) {
           deleteEvent(tmpEvent);
           deleteCalendar(tmpCal);
+          free(line);
+          fclose(fp);
           //TODO: real error code
-          *obj = NULL;
           err = INV_FILE;
           return err;
         } else {
@@ -106,8 +106,9 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
           deleteAlarm(tmpAlarm);
           deleteEvent(tmpEvent);
           deleteCalendar(tmpCal);
+          free(line);
+          fclose(fp);
           //TODO: real error code
-          *obj = NULL;
           err = INV_FILE;
           return err;
         } else {
@@ -124,8 +125,9 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
       }
     } else if (startsWith(line, "VERSION:")) {
       if (tmpCal == NULL) {
+        free(line);
+        fclose(fp);
         //TODO: real error code
-        *obj = NULL;
         err = INV_FILE;
         return err;
       }
@@ -135,15 +137,17 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
         tmpCal->version = atof(version);
       } else {
         deleteCalendar(tmpCal);
+        free(line);
+        fclose(fp);
         //TODO: real error code
-        *obj = NULL;
         err = INV_FILE;
         return err;
       }
     } else if (startsWith(line, "PRODID:")) {
       if (tmpCal == NULL) {
+        free(line);
+        fclose(fp);
         //TODO: error code
-        *obj = NULL;
         err = INV_FILE;
         return err;
       }
@@ -152,8 +156,9 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
         prodID = strtok(NULL, tok);
         strcpy(tmpCal->prodID, prodID);
       } else {
+        free(line);
+        fclose(fp);
         deleteCalendar(tmpCal);
-        *obj=NULL;
         //TODO: error codes
         err = INV_FILE;
         return err;
@@ -162,10 +167,11 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
       // Comment, do nothing
     } else if(startsWith(line, "UID:")) {
       if (!creatingEvent || strcmp(tmpEvent->UID, "temp") != 0) {
+        free(line);
+        fclose(fp);
         //TODO: error code
         deleteEvent(tmpEvent);
         deleteCalendar(tmpCal);
-        *obj = NULL;
         err = INV_FILE;
         return err;
       } else {
@@ -175,10 +181,11 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
       }
     } else if (startsWith(line, "DTSTAMP:")) {
       if (!creatingEvent || strcmp(tmpEvent->creationDateTime.date, "temp") != 0) {
+        free(line);
+        fclose(fp);
         //TODO: error code
         deleteEvent(tmpEvent);
         deleteCalendar(tmpCal);
-        *obj = NULL;
         err = INV_FILE;
         return err;
       } else {
@@ -194,7 +201,8 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
         //TODO: error code
         deleteEvent(tmpEvent);
         deleteCalendar(tmpCal);
-        *obj = NULL;
+        free(line);
+        fclose(fp);
         err = INV_FILE;
         return err;
       } else {
@@ -209,8 +217,9 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
         deleteAlarm(tmpAlarm);
         deleteEvent(tmpEvent);
         deleteCalendar(tmpCal);
+        free(line);
+        fclose(fp);
         //TODO: error code
-        *obj = NULL;
         err = INV_FILE;
         return err;
       } else {
@@ -225,8 +234,9 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
         deleteAlarm(tmpAlarm);
         deleteEvent(tmpEvent);
         deleteCalendar(tmpCal);
+        free(line);
+        fclose(fp);
         //TODO: error code
-        *obj = NULL;
         err = INV_FILE;
         return err;
       } else {
@@ -238,8 +248,9 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
     } else {
       // default extra property...
       if (tmpCal == NULL) {
+        free(line);
+        fclose(fp);
         //TODO: error code
-        *obj = NULL;
         err = INV_FILE;
         return err;
       }
@@ -255,7 +266,8 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
       } else {
         //TODO: real error codes
         deleteCalendar(tmpCal);
-        *obj = NULL;
+        free(line);
+        fclose(fp);
         err = INV_FILE;
         return err;
       }
@@ -263,8 +275,27 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
     free(line);
   }
   fclose(fp);
-  *obj = tmpCal;
-  err = OK;
+
+  if (creatingAlarm) {
+    deleteAlarm(tmpAlarm);
+    deleteEvent(tmpEvent);
+    deleteCalendar(tmpCal);
+    err = INV_ALARM;
+  } else if (creatingEvent) {
+    deleteEvent(tmpEvent);
+    deleteCalendar(tmpCal);
+    err = INV_EVENT;
+  } else if (!endCal) {
+    deleteCalendar(tmpCal);
+    err= INV_CAL;
+  } else {
+    err = validCal(tmpCal);
+    if (err != OK) {
+      deleteCalendar(tmpCal);
+    } else {
+      *obj = tmpCal;
+    }
+  }
   return err;
 }
 

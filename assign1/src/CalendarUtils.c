@@ -89,6 +89,19 @@ bool validAlarm(Alarm* alarm) {
   return true;
 }
 
+ICalErrorCode validCal(Calendar* cal) {
+  if (cal->version == 0.0) {
+    return INV_VER;
+  }
+  if (strcmp(cal->prodID, "temp") == 0) {
+    return INV_PRODID;
+  }
+  if (getLength(cal->events) < 1) {
+    return INV_CAL;
+  }
+  return OK;
+}
+
 // ======== String Helper Functs ======== //
 char* readLine(FILE* fp) {
   int lineStart, lineEnd;
