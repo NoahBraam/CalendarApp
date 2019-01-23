@@ -333,15 +333,42 @@ char* printCalendar(const Calendar* obj) {
 }
 
 char* printError(ICalErrorCode err) {
+  char* str;
   if (err == OK) {
-    char* str = malloc(sizeof(char) * 4);
+    str = malloc(sizeof(char) * 4);
     strcpy(str, "OK\n");
-    return str;
-  } else {
-    char* str = malloc(sizeof(char) * 14);
+  } else if (err == INV_CAL) {
+    str = malloc(sizeof(char) * 20);
+    strcpy(str, "Invalid Calendar\n");
+  } else if (err == INV_VER) {
+    str = malloc(sizeof(char) * 20);
+    strcpy(str, "Invalid Version\n");
+  } else if (err == DUP_VER) {
+    str = malloc(sizeof(char) * 21);
+    strcpy(str, "Duplicate Version\n");
+  } else if (err == INV_PRODID) {
+    str = malloc(sizeof(char) * 22);
+    strcpy(str, "Invalid Product ID\n");
+  } else if (err == DUP_PRODID) {
+    str = malloc(sizeof(char) * 24);
+    strcpy(str, "Duplicate Product ID\n");
+  } else if (err == INV_EVENT) {
+    str = malloc(sizeof(char) * 20);
+    strcpy(str, "Invalid Event\n");
+  } else if (err == INV_DT) {
+    str = malloc(sizeof(char) * 24);
+    strcpy(str, "Invalid Date Time\n");
+  } else if (err == INV_ALARM) {
+    str = malloc(sizeof(char) * 18);
+    strcpy(str, "Invalid Alarm\n");
+  } else if (err == INV_FILE){
+    str = malloc(sizeof(char) * 14);
     strcpy(str, "Invalid File\n");
-    return str;
+  } else {
+    str = malloc(sizeof(char) * 15);
+    strcpy(str, "Other Error\n");
   }
+  return str;
 }
 
 //============ Helper Functions =============//
