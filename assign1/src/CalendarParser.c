@@ -36,7 +36,7 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
   }
 
   char cur;
-  const char tok[2] = ":";
+  const char tok[3] = ":;";
   bool endCal = false;
   bool creatingEvent = false, creatingAlarm = false;
   Calendar* tmpCal = NULL;
@@ -53,6 +53,7 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
     if (line == NULL) {
       break;
     }
+    printf("%s\n", line);
     // ======== End Read Line ======== //
 
     // ======== Start Handle Line ======== //
@@ -229,7 +230,7 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
         action = strtok(NULL, "");
         strcpy(tmpAlarm->action, action);
       }
-    } else if(startsWith(line, "TRIGGER:")){
+    } else if(startsWith(line, "TRIGGER")){
       if (!creatingAlarm) {
 
       } else if (tmpAlarm->trigger != NULL) {
