@@ -417,7 +417,7 @@ char* printEvent(void* toBePrinted) {
   int len = createLen+startLen+propLen+alarmLen+100;
   char* str = malloc(sizeof(char) * len);
 
-  snprintf(str, len, "UID: %s\nCreated: %s\nStart: %s\nProperties: %s\nAlarms: %s\n", evt->UID, createTime, startTime, propStr, alarmStr);
+  snprintf(str, len, "UID: %s\nCreated: %s\nStart: %s\nProperties: %s\nAlarms: %s", evt->UID, createTime, startTime, propStr, alarmStr);
 
   free(createTime);
   free(startTime);
@@ -451,7 +451,7 @@ char* printAlarm(void* toBePrinted) {
 
   char* str = malloc(sizeof(char) * len);
 
-  snprintf(str, len, "Action: %s\nTrigger: %s\nProperties: %s\n", alarm->action, alarm->trigger, propStr);
+  snprintf(str, len, "Action: %s\nTrigger: %s\nProperties: %s", alarm->action, alarm->trigger, propStr);
 
   free(propStr);
   return str;
