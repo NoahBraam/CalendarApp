@@ -96,8 +96,7 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
           deleteCalendar(tmpCal);
           free(line);
           fclose(fp);
-          //TODO: real error code
-          err = INV_FILE;
+          err = INV_EVENT;
           return err;
         } else {
           insertBack(tmpCal->events, tmpEvent);
@@ -111,8 +110,7 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
           deleteCalendar(tmpCal);
           free(line);
           fclose(fp);
-          //TODO: real error code
-          err = INV_FILE;
+          err = INV_ALARM;
           return err;
         } else {
           insertBack(tmpEvent->alarms, tmpAlarm);
