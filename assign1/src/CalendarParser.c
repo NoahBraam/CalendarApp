@@ -64,11 +64,21 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
         } else {
           free(line);
           fclose(fp);
-          //TODO: actual error code.
           err = INV_FILE;
           return err;
         }
       } else if (endsWith(line, "VEVENT")) {
+        if (creatingEvent) {
+          err = INV_EVENT;
+          free(line);
+          fclose(fp);
+          if (creatingAlarm) {
+            deleteAlarm(tmpAlarm);
+          }
+          deleteEvent(tmpEvent);
+          deleteCalendar(tmpCal);
+          return err;
+        }
         tmpEvent = initEvent(&printProperty, &deleteProperty, &compareProperties, &printAlarm, &deleteAlarm, &compareAlarms);
         creatingEvent = true;
       } else if (endsWith(line, "VALARM")) {
@@ -76,12 +86,42 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
           tmpAlarm = initAlarm(&printProperty, &deleteProperty, &compareProperties);
           creatingAlarm = true;
         } else {
-
+          err = INV_ALARM;
+          if (creatingAlarm) {
+            deleteAlarm(tmpAlarm);
+          }
+          if (creatingEvent) {
+            deleteEvent(tmpEvent);
+          }
+          deleteCalendar(tmpCal);
+          free(line);
+          fclose(fp);
+          return err;
         }
 
       } else {
           Property* tmpProp = createProperty(line);
-          if (creatingEvent) {
+          if (tmpProp == NULL) {
+            if (creatingAlarm) {
+              err = INV_ALARM;
+              deleteAlarm(tmpAlarm);
+            }
+            if (creatingEvent) {
+              if (err != INV_ALARM) {
+                err = INV_EVENT;
+              }
+              deleteEvent(tmpEvent);
+            }
+            if (err != INV_ALARM && err != INV_EVENT) {
+              err = INV_CAL;
+            }
+            deleteCalendar(tmpCal);
+            free(line);
+            fclose(fp);
+            return err;
+          } else if (creatingAlarm) {
+            insertBack(tmpAlarm->properties, tmpProp);
+          } else if (creatingEvent) {
             insertBack(tmpEvent->properties, tmpProp);
           } else {
             insertBack(tmpCal->properties, tmpProp);
@@ -118,17 +158,36 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
         }
       } else {
         Property* tmpProp = createProperty(line);
-        if (creatingEvent) {
-          insertBack(tmpEvent->properties, tmpProp);
-        } else {
-          insertBack(tmpCal->properties, tmpProp);
-        }
+          if (tmpProp == NULL) {
+            if (creatingAlarm) {
+              err = INV_ALARM;
+              deleteAlarm(tmpAlarm);
+            }
+            if (creatingEvent) {
+              if (err != INV_ALARM) {
+                err = INV_EVENT;
+              }
+              deleteEvent(tmpEvent);
+            }
+            if (err != INV_ALARM && err != INV_EVENT) {
+              err = INV_CAL;
+            }
+            deleteCalendar(tmpCal);
+            free(line);
+            fclose(fp);
+            return err;
+          } else if (creatingAlarm) {
+            insertBack(tmpAlarm->properties, tmpProp);
+          } else if (creatingEvent) {
+            insertBack(tmpEvent->properties, tmpProp);
+          } else {
+            insertBack(tmpCal->properties, tmpProp);
+          }
       }
     } else if (startsWith(line, "VERSION:")) {
       if (tmpCal == NULL) {
         free(line);
         fclose(fp);
-        //TODO: real error code
         err = INV_FILE;
         return err;
       }
@@ -140,16 +199,14 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
         deleteCalendar(tmpCal);
         free(line);
         fclose(fp);
-        //TODO: real error code
-        err = INV_FILE;
+        err = DUP_VER;
         return err;
       }
     } else if (startsWith(line, "PRODID:")) {
       if (tmpCal == NULL) {
         free(line);
         fclose(fp);
-        //TODO: error code
-        err = INV_FILE;
+        err = INV_CAL;
         return err;
       }
       if (strcmp(tmpCal->prodID, "temp") == 0) {
@@ -160,8 +217,7 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
         free(line);
         fclose(fp);
         deleteCalendar(tmpCal);
-        //TODO: error codes
-        err = INV_FILE;
+        err = DUP_PRODID;
         return err;
       }
     } else if(startsWith(line, ";")) {
@@ -170,10 +226,9 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
       if (!creatingEvent || strcmp(tmpEvent->UID, "temp") != 0) {
         free(line);
         fclose(fp);
-        //TODO: error code
         deleteEvent(tmpEvent);
         deleteCalendar(tmpCal);
-        err = INV_FILE;
+        err = INV_EVENT;
         return err;
       } else {
         char* uid = strtok(line, tok);
@@ -181,13 +236,39 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
         strcpy(tmpEvent->UID, uid);
       }
     } else if (startsWith(line, "DTSTAMP:")) {
-      if (!creatingEvent || strcmp(tmpEvent->creationDateTime.date, "temp") != 0) {
+      if (!creatingEvent){
+        Property* tmpProp = createProperty(line);
+          if (tmpProp == NULL) {
+            if (creatingAlarm) {
+              err = INV_ALARM;
+              deleteAlarm(tmpAlarm);
+            }
+            if (creatingEvent) {
+              if (err != INV_ALARM) {
+                err = INV_EVENT;
+              }
+              deleteEvent(tmpEvent);
+            }
+            if (err != INV_ALARM && err != INV_EVENT) {
+              err = INV_CAL;
+            }
+            deleteCalendar(tmpCal);
+            free(line);
+            fclose(fp);
+            return err;
+          } else if (creatingAlarm) {
+            insertBack(tmpAlarm->properties, tmpProp);
+          } else if (creatingEvent) {
+            insertBack(tmpEvent->properties, tmpProp);
+          } else {
+            insertBack(tmpCal->properties, tmpProp);
+          }
+      } else if (strcmp(tmpEvent->creationDateTime.date, "temp") != 0) {
         free(line);
         fclose(fp);
-        //TODO: error code
         deleteEvent(tmpEvent);
         deleteCalendar(tmpCal);
-        err = INV_FILE;
+        err = INV_DT;
         return err;
       } else {
         char* dt = strtok(line, tok);
@@ -197,14 +278,37 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
     } else if (startsWith(line, "DTSTART:")) {
       if (!creatingEvent) {
         Property* tmpProp = createProperty(line);
-        insertBack(tmpCal->properties, tmpProp);
+          if (tmpProp == NULL) {
+            if (creatingAlarm) {
+              err = INV_ALARM;
+              deleteAlarm(tmpAlarm);
+            }
+            if (creatingEvent) {
+              if (err != INV_ALARM) {
+                err = INV_EVENT;
+              }
+              deleteEvent(tmpEvent);
+            }
+            if (err != INV_ALARM && err != INV_EVENT) {
+              err = INV_CAL;
+            }
+            deleteCalendar(tmpCal);
+            free(line);
+            fclose(fp);
+            return err;
+          } else if (creatingAlarm) {
+            insertBack(tmpAlarm->properties, tmpProp);
+          } else if (creatingEvent) {
+            insertBack(tmpEvent->properties, tmpProp);
+          } else {
+            insertBack(tmpCal->properties, tmpProp);
+          }
       } else if (strcmp(tmpEvent->startDateTime.date, "temp") != 0) {
-        //TODO: error code
         deleteEvent(tmpEvent);
         deleteCalendar(tmpCal);
         free(line);
         fclose(fp);
-        err = INV_FILE;
+        err = INV_DT;
         return err;
       } else {
         char* dt = strtok(line, tok);
@@ -213,15 +317,39 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
       }
     } else if (startsWith(line, "ACTION:")) {
       if (!creatingAlarm) {
-
+        Property* tmpProp = createProperty(line);
+          if (tmpProp == NULL) {
+            if (creatingAlarm) {
+              err = INV_ALARM;
+              deleteAlarm(tmpAlarm);
+            }
+            if (creatingEvent) {
+              if (err != INV_ALARM) {
+                err = INV_EVENT;
+              }
+              deleteEvent(tmpEvent);
+            }
+            if (err != INV_ALARM && err != INV_EVENT) {
+              err = INV_CAL;
+            }
+            deleteCalendar(tmpCal);
+            free(line);
+            fclose(fp);
+            return err;
+          } else if (creatingAlarm) {
+            insertBack(tmpAlarm->properties, tmpProp);
+          } else if (creatingEvent) {
+            insertBack(tmpEvent->properties, tmpProp);
+          } else {
+            insertBack(tmpCal->properties, tmpProp);
+          }
       } else if (strcmp(tmpAlarm->action, "temp") != 0) {
         deleteAlarm(tmpAlarm);
         deleteEvent(tmpEvent);
         deleteCalendar(tmpCal);
         free(line);
         fclose(fp);
-        //TODO: error code
-        err = INV_FILE;
+        err = INV_ALARM;
         return err;
       } else {
         char* action = strtok(line, tok);
@@ -230,15 +358,39 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
       }
     } else if(startsWith(line, "TRIGGER")){
       if (!creatingAlarm) {
-
+        Property* tmpProp = createProperty(line);
+          if (tmpProp == NULL) {
+            if (creatingAlarm) {
+              err = INV_ALARM;
+              deleteAlarm(tmpAlarm);
+            }
+            if (creatingEvent) {
+              if (err != INV_ALARM) {
+                err = INV_EVENT;
+              }
+              deleteEvent(tmpEvent);
+            }
+            if (err != INV_ALARM && err != INV_EVENT) {
+              err = INV_CAL;
+            }
+            deleteCalendar(tmpCal);
+            free(line);
+            fclose(fp);
+            return err;
+          } else if (creatingAlarm) {
+            insertBack(tmpAlarm->properties, tmpProp);
+          } else if (creatingEvent) {
+            insertBack(tmpEvent->properties, tmpProp);
+          } else {
+            insertBack(tmpCal->properties, tmpProp);
+          }
       } else if (tmpAlarm->trigger != NULL) {
         deleteAlarm(tmpAlarm);
         deleteEvent(tmpEvent);
         deleteCalendar(tmpCal);
         free(line);
         fclose(fp);
-        //TODO: error code
-        err = INV_FILE;
+        err = INV_ALARM;
         return err;
       } else {
         char* trigger = strtok(line, tok);
@@ -251,27 +403,35 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
       if (tmpCal == NULL) {
         free(line);
         fclose(fp);
-        //TODO: error code
-        err = INV_FILE;
+        err = INV_CAL;
         return err;
       }
       Property* tmpProp = createProperty(line);
-      if (tmpProp != NULL) {
-        if (creatingAlarm) {
-          insertBack(tmpAlarm->properties, tmpProp);
-        } else if (creatingEvent) {
-          insertBack(tmpEvent->properties, tmpProp);
-        } else {
-          insertBack(tmpCal->properties, tmpProp);
-        }
-      } else {
-        //TODO: real error codes
-        deleteCalendar(tmpCal);
-        free(line);
-        fclose(fp);
-        err = INV_FILE;
-        return err;
-      }
+          if (tmpProp == NULL) {
+            if (creatingAlarm) {
+              err = INV_ALARM;
+              deleteAlarm(tmpAlarm);
+            }
+            if (creatingEvent) {
+              if (err != INV_ALARM) {
+                err = INV_EVENT;
+              }
+              deleteEvent(tmpEvent);
+            }
+            if (err != INV_ALARM && err != INV_EVENT) {
+              err = INV_CAL;
+            }
+            deleteCalendar(tmpCal);
+            free(line);
+            fclose(fp);
+            return err;
+          } else if (creatingAlarm) {
+            insertBack(tmpAlarm->properties, tmpProp);
+          } else if (creatingEvent) {
+            insertBack(tmpEvent->properties, tmpProp);
+          } else {
+            insertBack(tmpCal->properties, tmpProp);
+          }
     }
     free(line);
   }

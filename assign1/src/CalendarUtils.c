@@ -48,12 +48,21 @@ Property* createProperty(char* line) {
   }
   tempName[i] = '\0';
   int len = strlen(line) - i;
+  if (len == 0) {
+    deleteProperty(prop);
+    return NULL;
+  }
   char* tempDesc = malloc(sizeof(char) * (len + 1));
   i++;
   for(int j=0; j<len; j++) {
     tempDesc[j] = line[i+j];
   }
   tempDesc[len] = '\0';
+  if (strlen(tempDesc) == 0) {
+    free(tempDesc);
+    deleteProperty(prop);
+    return NULL;
+  }
   strcpy(prop->propName, tempName);
   strcpy(prop->propDescr, tempDesc);
 
@@ -74,6 +83,9 @@ void handleDTStamp(char* dt, DateTime* toChange) {
 
 bool validEvent(Event* evt) {
   if (strcmp(evt->creationDateTime.date, "temp") == 0 || strcmp(evt->startDateTime.date, "temp") == 0) {
+    return false;
+  }
+  if (strcmp(evt->UID, "temp") == 0) {
     return false;
   }
   return true;
@@ -109,6 +121,9 @@ char* readLine(FILE* fp) {
   char cur, prev;
   // Read a line
   while ((cur = fgetc(fp)) != '\n') {
+    if (cur == EOF) {
+      return NULL;
+    }
     prev = cur;
   }
   lineEnd = ftell(fp);
@@ -123,6 +138,10 @@ char* readLine(FILE* fp) {
   // Handle line folding
   if ((cur = fgetc(fp)) == ' ' || cur == '\t' || prev != '\r') {
     newLine = readLine(fp);
+    if (newLine == NULL) {
+      free(line);
+      return NULL;
+    }
     char* tmpLine = line;
     line = malloc(sizeof(char) * (len + strlen(newLine)));
     snprintf(line, len + strlen(newLine), "%s%s", tmpLine, newLine);
