@@ -12,7 +12,10 @@
 
 ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
   ICalErrorCode err;
-
+  if (obj == NULL) {
+    err = OTHER_ERROR;
+    return err;
+  }
   // Set to NULL so that we don't need to if there is an error.
   *obj = NULL;
   // Filename is NULL or too short
