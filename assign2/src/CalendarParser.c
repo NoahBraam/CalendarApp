@@ -409,10 +409,30 @@ ICalErrorCode writeCalendar(char* fileName, const Calendar* obj) {
     err = WRITE_ERROR;
     return err;
   }
-  fprintf(fp, "BEGIN:VCALENDAR\n");
-  fprintf(fp, "VERSION:%.1lf\n", obj->version);
-  fprintf(fp, "PRODID:%s\n", obj->prodID);
-  fprintf(fp, "END:VCALENDAR\n");
+  fprintf(fp, "BEGIN:VCALENDAR\r\n");
+  fprintf(fp, "VERSION:%.1lf\r\n", obj->version);
+  fprintf(fp, "PRODID:%s\r\n", obj->prodID);
+  // Loop for events
+  ListIterator evtIter = createIterator(obj->events);
+  void* tmpObj = evtIter.current->data;
+  Event* curEvt;
+  do {
+    curEvt = (Event*)tmpObj;
+    fprintf(fp, "BEGIN:VEVENT\r\n");
+    fprintf(fp, "UID:%s\r\n", curEvt->UID);
+    fprintf(fp, "DTSTAMP:%sT%s", curEvt->creationDateTime.date, curEvt->creationDateTime.time);
+    if (curEvt->creationDateTime.UTC) {
+      fprintf(fp,"Z");
+    }
+    fprintf(fp,"\r\n");
+    fprintf(fp, "DTSTART:%sT%s", curEvt->startDateTime.date, curEvt->startDateTime.time);
+    if (curEvt->startDateTime.UTC) {
+      fprintf(fp,"Z");
+    }
+    fprintf(fp,"\r\n");
+    fprintf(fp, "END:VEVENT\r\n");
+  } while((tmpObj = nextElement(&evtIter) ) != NULL);
+  fprintf(fp, "END:VCALENDAR\r\n");
   fclose(fp);
   return err;
 }
