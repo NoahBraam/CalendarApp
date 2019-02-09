@@ -380,6 +380,43 @@ char* printError(ICalErrorCode err) {
   return str;
 }
 
+ICalErrorCode writeCalendar(char* fileName, const Calendar* obj) {
+  ICalErrorCode err;
+  err = OK;
+
+  // Filename is NULL or too short
+  if (fileName == NULL || strlen(fileName) < 5) {
+    err = WRITE_ERROR;
+    return err;
+  }
+
+  // Wrong extention
+  if(strcmp(fileName + strlen(fileName) - 4, ".ics")) {
+    err = WRITE_ERROR;
+    return err;
+  }
+  
+  // Invalid object
+  if (obj == NULL) {
+    err = WRITE_ERROR;
+    return err;
+  }
+
+  FILE* fp = fopen(fileName, "w+");
+
+  // Can't open file
+  if (fp == NULL) {
+    err = WRITE_ERROR;
+    return err;
+  }
+  fprintf(fp, "BEGIN:VCALENDAR\n");
+  fprintf(fp, "VERSION:%.1lf\n", obj->version);
+  fprintf(fp, "PRODID:%s\n", obj->prodID);
+  fprintf(fp, "END:VCALENDAR\n");
+  fclose(fp);
+  return err;
+}
+
 //============ Helper Functions =============//
 void deleteEvent(void* toBeDeleted) {
   if (toBeDeleted == NULL) {

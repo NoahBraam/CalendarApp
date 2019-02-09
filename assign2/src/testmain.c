@@ -10,6 +10,7 @@ int main(int argc, char** argv) {
   printf("%s\n", err);
   free(err);
   if (cal != NULL) {
+    writeCalendar("test.ics", cal);
     char* calS = printCalendar(cal);
     printf("%s\n", calS);
     free(calS);
