@@ -116,7 +116,20 @@ void writeProps(FILE* fp, List* props) {
 }
 
 void writeAlarms(FILE* fp, List* alarms) {
-
+  if (alarms->length < 1) {
+    return;
+  }
+  ListIterator alarmsIter = createIterator(alarms);
+  void* tmpObj;
+  Alarm* tmpAlarm;
+  while((tmpObj = nextElement(&alarmsIter)) != NULL) {
+    tmpAlarm = (Alarm*)tmpObj;
+    fprintf(fp, "BEGIN:VALARM\r\n");
+    fprintf(fp, "TRIGGER;%s\r\n", tmpAlarm->trigger);
+    fprintf(fp, "ACTION:%s\r\n", tmpAlarm->action);
+    writeProps(fp, tmpAlarm->properties);
+    fprintf(fp, "END:VALARM\r\n");
+  }
 }
 
 // ======== String Helper Functs ======== //
