@@ -440,6 +440,32 @@ ICalErrorCode writeCalendar(char* fileName, const Calendar* obj) {
   return err;
 }
 
+ICalErrorCode validateCalendar(const Calendar* obj) {
+  ICalErrorCode err = OK;
+
+  // Make sure obj exists
+  if (obj == NULL) {
+    err = INV_CAL;
+    return err;
+  }
+
+  // Basic Calendar Validation
+  if (obj->events == NULL || obj->properties == NULL) {
+    err = INV_CAL;
+    return err;
+  }
+  if (strlen(obj->prodID) > 1000 || strcmp(obj->prodID, "") == 0) {
+    err = INV_CAL;
+    return err;
+  }
+  if (getLength(obj->events) < 1) {
+    err = INV_CAL;
+    return err;
+  }
+
+  return err;
+}
+
 //============ Helper Functions =============//
 void deleteEvent(void* toBeDeleted) {
   if (toBeDeleted == NULL) {

@@ -13,9 +13,9 @@ typedef enum ers {OK, INV_FILE, INV_CAL, INV_VER, DUP_VER, INV_PRODID, DUP_PRODI
 
 //Represents iCalendar Date-time
 typedef struct dt {
-	//YYYYMMDD
+	//YYYYMMDD.  Must not exceed the array length.   Must not be an empty string.
 	char date[9]; 
-	//hhmmss
+	//hhmmss.   Must not exceed the array length.   Must not be an empty string.
 	char time[7]; 
 	//indicates whether this is UTC time
 	bool	UTC;  
@@ -23,18 +23,18 @@ typedef struct dt {
 
 //Represents a generic iCalendar property
 typedef struct prop {
-	//Property name.  We will assume that the property name, even if malformed, does not exceed 200 bytes
+	//Property name. Must not exceed the array length.   Must not be an empty string.
 	char 	propName[200];
 	//Property description.  We use a C99 flexible array member, which we will discuss in class.
-	//Must not be empty
+	//Must not be an empty string
 	char	propDescr[]; 
 } Property;
 
 //Represents an iCalendar alarm component
 typedef struct alarm {
-	//Alarm action.  We will assume that the action, even if malformed, does not exceed 200 bytes
+	//Alarm action.  Must not exceed the array length.   Must not be an empty string.
     char    action[200];
-	//Alarm trigger.  Must not be null.
+	//Alarm trigger.  Must not be NULL.   Must not be an empty string.
     char*   trigger;
 	//Additional alarm properties.  
 	//All objects in the list will be of type Property.  It must not be NULL.  It may be empty.
@@ -43,7 +43,7 @@ typedef struct alarm {
 
 //Represents an iCalendar event component
 typedef struct evt {
-	//Event user ID.  We will assume that the UserID, even if malformed, does not exceed 1000 bytes
+	//Event user ID.  Must not exceed the array length.  Must not be an empty string.
 	char 		UID[1000];
 	//Event creation date-time.
     DateTime 	creationDateTime;
@@ -65,7 +65,7 @@ typedef struct evt {
 typedef struct ical {
 	//iCalendar version
 	float 	version;
-	//Product ID.  We will assume that the UserID, even if malformed, does not exceed 1000 bytes.  Must not be an empty string.
+	//Product ID.  Must not exceed the array length.  Must not be an empty string.
 	char 	prodID[1000];
 	
 	//List of events associated with the event.  
@@ -87,7 +87,7 @@ typedef struct ical {
  *@post Either:
         A valid calendar has been created, its address was stored in the variable obj, and OK was returned
 		or 
-		An error occurred, the calendar was not created, all temporary memory was freed, obj was set to NULL, and the 
+		An error occurred, the calendar was not created, all temporary memory was freed, obj was set to NULL, and the
 		appropriate error code was returned
  *@return the error code indicating success or the error encountered when parsing the calendar
  *@param fileName - a string containing the name of the iCalendar file
@@ -97,7 +97,7 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj);
 
 
 /** Function to delete all calendar content and free all the memory.
- *@pre Calendar object exists, is not null, and has not been freed
+ *@pre Calendar object exists, is not NULL, and has not been freed
  *@post Calendar object had been freed
  *@return none
  *@param obj - a pointer to a Calendar struct
@@ -106,7 +106,7 @@ void deleteCalendar(Calendar* obj);
 
 
 /** Function to create a string representation of a Calendar object.
- *@pre Calendar object exists, is not null, and is valid
+ *@pre Calendar object exists, is not NULL, and is valid
  *@post Calendar has not been modified in any way, and a string representing the Calndar contents has been created
  *@return a string contaning a humanly readable representation of a Calendar object
  *@param obj - a pointer to a Calendar struct
@@ -136,6 +136,17 @@ char* printError(ICalErrorCode err);
  	fileName - the name of the output file
  **/
 ICalErrorCode writeCalendar(char* fileName, const Calendar* obj);
+
+
+/** Function to validating an existing a Calendar object
+ *@pre Calendar object exists and is not NULL
+ *@post Calendar has not been modified in any way
+ *@return the error code indicating success or the error encountered when validating the calendar
+ *@param obj - a pointer to a Calendar struct
+ **/
+ICalErrorCode validateCalendar(const Calendar* obj);
+
+
 // *********************************************************************
 
 
