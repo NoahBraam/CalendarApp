@@ -20,6 +20,8 @@ void handleDTStamp(char* dt, DateTime* toChange);
 bool validEvent(Event* evt);
 bool validAlarm(Alarm* alarm);
 ICalErrorCode validCal(Calendar* cal);
+void writeProps(FILE* fp, List* props);
+void writeAlarms(FILE* fp, List* alarms);
 
 char* readLine(FILE* fp);
 bool startsWith(char* str, char* search);

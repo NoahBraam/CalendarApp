@@ -414,9 +414,9 @@ ICalErrorCode writeCalendar(char* fileName, const Calendar* obj) {
   fprintf(fp, "PRODID:%s\r\n", obj->prodID);
   // Loop for events
   ListIterator evtIter = createIterator(obj->events);
-  void* tmpObj = evtIter.current->data;
+  void* tmpObj;
   Event* curEvt;
-  do {
+   while((tmpObj = nextElement(&evtIter) ) != NULL) {
     curEvt = (Event*)tmpObj;
     fprintf(fp, "BEGIN:VEVENT\r\n");
     fprintf(fp, "UID:%s\r\n", curEvt->UID);
@@ -430,8 +430,11 @@ ICalErrorCode writeCalendar(char* fileName, const Calendar* obj) {
       fprintf(fp,"Z");
     }
     fprintf(fp,"\r\n");
+    writeProps(fp, curEvt->properties);
+    writeAlarms(fp, curEvt->alarms);
     fprintf(fp, "END:VEVENT\r\n");
-  } while((tmpObj = nextElement(&evtIter) ) != NULL);
+  }
+  writeProps(fp, obj->properties);
   fprintf(fp, "END:VCALENDAR\r\n");
   fclose(fp);
   return err;

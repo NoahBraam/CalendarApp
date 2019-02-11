@@ -102,6 +102,23 @@ ICalErrorCode validCal(Calendar* cal) {
   return OK;
 }
 
+void writeProps(FILE* fp, List* props) {
+  if (props->length < 1) {
+    return;
+  }
+  ListIterator propsIter = createIterator(props);
+  void* tmpObj;
+  Property* tmpProp;
+  while((tmpObj = nextElement(&propsIter)) != NULL) {
+    tmpProp = (Property*)tmpObj;
+    fprintf(fp, "%s:%s\r\n", tmpProp->propName, tmpProp->propDescr);
+  }
+}
+
+void writeAlarms(FILE* fp, List* alarms) {
+
+}
+
 // ======== String Helper Functs ======== //
 char* readLine(FILE* fp) {
   int lineStart, lineEnd;
