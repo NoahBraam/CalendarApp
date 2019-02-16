@@ -462,7 +462,47 @@ ICalErrorCode validateCalendar(const Calendar* obj) {
     err = INV_CAL;
     return err;
   }
+  // Calendar property validation...
 
+  
+  void* tmpObj;
+  Event* tmpEvent;
+  ListIterator evtIter = createIterator(obj->events);
+  while ((tmpObj = nextElement(&evtIter)) != NULL) {
+    tmpEvent = (Event*)tmpObj;
+    if (strlen(tmpEvent->UID) > 1000 || strcmp(tmpEvent->UID, "") == 0) {
+      err = INV_EVENT;
+    }
+    if (tmpEvent->properties == NULL) {
+      err = INV_EVENT;
+    } else {
+      // Event property validation... later problem.
+
+    }
+    if (tmpEvent->alarms == NULL) {
+      err = INV_EVENT;
+    } else {
+      Alarm* tmpAlarm;
+      ListIterator almIter = createIterator(tmpEvent->alarms);
+      // Alarm verification
+      while ((tmpObj = nextElement(&almIter)) != NULL) {
+        tmpAlarm = (Alarm*)tmpObj;
+        if (strlen(tmpAlarm->action) > 200 || strcmp(tmpAlarm->action, "") == 0) {
+          err = INV_ALARM;
+        }
+        if (tmpAlarm->trigger == NULL) {
+          err = INV_ALARM;
+        } else if (strcmp(tmpAlarm->trigger, "") == 0) {
+          err = INV_ALARM;
+        }
+        if (tmpAlarm->properties == NULL) {
+          err = INV_ALARM;
+        } else {
+          // Alarm property validation, later issue.
+        }
+      }
+    }
+  }
   return err;
 }
 
