@@ -53,7 +53,6 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
     if (line == NULL) {
       break;
     }
-    //printf("%s\n", line);
     // ======== End Read Line ======== //
 
     // ======== Start Handle Line ======== //
