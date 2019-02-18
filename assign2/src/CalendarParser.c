@@ -703,6 +703,29 @@ ICalErrorCode validateCalendar(const Calendar* obj) {
   return err;
 }
 
+void addEvent(Calendar* cal, Event* toBeAdded) {
+  if (cal == NULL || toBeAdded == NULL) {
+    return;
+  }
+  if (cal->events == NULL) {
+    return;
+  }
+  insertBack(cal->events, toBeAdded);
+}
+//============ JSON Functions ============//
+
+char* dtToJSON(DateTime prop) {
+  int len = 51;
+  char* dtString = malloc(sizeof(char) * len);
+
+  if (prop.UTC) {
+    snprintf(dtString, len, "{\"date\":\"%s\",\"time\":\"%s\",\"isUTC\":true}", prop.date, prop.time);
+  } else {
+    snprintf(dtString, len, "{\"date\":\"%s\",\"time\":\"%s\",\"isUTC\":false}", prop.date, prop.time);
+  }
+  return dtString;
+}
+
 //============ Helper Functions =============//
 void deleteEvent(void* toBeDeleted) {
   if (toBeDeleted == NULL) {

@@ -16,5 +16,16 @@ int main(int argc, char** argv) {
     free(calS);
     deleteCalendar(cal);
   }
+  DateTime testDt;
+  strcpy(testDt.date, "12345678");
+  strcpy(testDt.time, "987654");
+  testDt.UTC = false;
 
+  char* string = dtToJSON(testDt);
+  printf("%s\n", string);
+  free(string);
+  testDt.UTC = true;
+  string = dtToJSON(testDt);
+  printf("%s\n", string);
+  free(string);
 }
