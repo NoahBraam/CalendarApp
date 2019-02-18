@@ -283,7 +283,15 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
       } else {
         char* dt = strtok(line, tok);
         dt = strtok(NULL, tok);
-        handleDTStamp(dt, &tmpEvent->creationDateTime);
+        ICalErrorCode tempErr = handleDTStamp(dt, &tmpEvent->creationDateTime);
+        if (tempErr != OK) {
+          err = tempErr;
+          fclose(fp);
+          free(line);
+          deleteEvent(tmpEvent);
+          deleteCalendar(tmpCal);
+          return err;
+        }
       }
     } else if (startsWith(line, "DTSTART:")) {
       if (!creatingEvent) {
@@ -323,7 +331,15 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
       } else {
         char* dt = strtok(line, tok);
         dt = strtok(NULL, tok);
-        handleDTStamp(dt, &tmpEvent->startDateTime);
+        ICalErrorCode tempErr = handleDTStamp(dt, &tmpEvent->startDateTime);
+        if (tempErr != OK) {
+          err = tempErr;
+          fclose(fp);
+          free(line);
+          deleteEvent(tmpEvent);
+          deleteCalendar(tmpCal);
+          return err;
+        }
       }
     } else if (startsWith(line, "ACTION:")) {
       if (!creatingAlarm) {
@@ -577,7 +593,7 @@ ICalErrorCode writeCalendar(char* fileName, const Calendar* obj) {
     err = WRITE_ERROR;
     return err;
   }
-  
+
   // Invalid object
   if (obj == NULL) {
     err = WRITE_ERROR;
@@ -646,7 +662,7 @@ ICalErrorCode validateCalendar(const Calendar* obj) {
   }
   // Calendar property validation...
 
-  
+
   void* tmpObj;
   Event* tmpEvent;
   ListIterator evtIter = createIterator(obj->events);

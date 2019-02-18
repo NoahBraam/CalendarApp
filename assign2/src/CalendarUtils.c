@@ -46,14 +46,27 @@ Property* createProperty(char* line) {
       return NULL;
     }
   }
+  if (i == 0) {
+    free(prop);
+    return NULL;
+  }
   tempName[i] = '\0';
   int len = strlen(line) - i;
+  if (len == 0) {
+    deleteProperty(prop);
+    return NULL;
+  }
   char* tempDesc = malloc(sizeof(char) * (len + 1));
   i++;
   for(int j=0; j<len; j++) {
     tempDesc[j] = line[i+j];
   }
   tempDesc[len] = '\0';
+  if (strlen(tempDesc) == 0) {
+    free(tempDesc);
+    deleteProperty(prop);
+    return NULL;
+  }
   strcpy(prop->propName, tempName);
   strcpy(prop->propDescr, tempDesc);
 
@@ -62,18 +75,31 @@ Property* createProperty(char* line) {
   return prop;
 }
 
-void handleDTStamp(char* dt, DateTime* toChange) {
+ICalErrorCode handleDTStamp(char* dt, DateTime* toChange) {
   if (endsWith(dt, "Z")) {
     (*toChange).UTC = true;
   } else {
     (*toChange).UTC = false;
   }
-  strcpy((*toChange).date, strtok(dt, "T"));
-  strcpy((*toChange).time, strtok(NULL, "Z"));
+  char* token  = strtok(dt, "T");
+  strcpy((*toChange).date, token);
+  if (strlen((*toChange).date) != 8) {
+    return INV_DT;
+  }
+  token = strtok(NULL,"Z");
+  if (token == NULL) {
+    return INV_DT;
+  }
+  strcpy((*toChange).time, token);
+
+  return OK;
 }
 
 bool validEvent(Event* evt) {
   if (strcmp(evt->creationDateTime.date, "temp") == 0 || strcmp(evt->startDateTime.date, "temp") == 0) {
+    return false;
+  }
+  if (strcmp(evt->UID, "temp") == 0) {
     return false;
   }
   return true;
@@ -91,10 +117,10 @@ bool validAlarm(Alarm* alarm) {
 
 ICalErrorCode validCal(Calendar* cal) {
   if (cal->version == 0.0) {
-    return INV_VER;
+    return INV_CAL;
   }
   if (strcmp(cal->prodID, "temp") == 0) {
-    return INV_PRODID;
+    return INV_CAL;
   }
   if (getLength(cal->events) < 1) {
     return INV_CAL;
@@ -139,6 +165,9 @@ char* readLine(FILE* fp) {
   char cur, prev;
   // Read a line
   while ((cur = fgetc(fp)) != '\n') {
+    if (cur == EOF) {
+      return NULL;
+    }
     prev = cur;
   }
   lineEnd = ftell(fp);
@@ -152,7 +181,12 @@ char* readLine(FILE* fp) {
   char* newLine;
   // Handle line folding
   if ((cur = fgetc(fp)) == ' ' || cur == '\t' || prev != '\r') {
+    fseek(fp, ftell(fp) + 1, SEEK_SET);
     newLine = readLine(fp);
+    if (newLine == NULL) {
+      free(line);
+      return NULL;
+    }
     char* tmpLine = line;
     line = malloc(sizeof(char) * (len + strlen(newLine)));
     snprintf(line, len + strlen(newLine), "%s%s", tmpLine, newLine);

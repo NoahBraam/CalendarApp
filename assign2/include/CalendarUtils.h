@@ -16,7 +16,7 @@ Calendar* initCal(char* (*printFunction1)(void* toBePrinted),void (*deleteFuncti
 Event* initEvent(char* (*printFunction1)(void* toBePrinted),void (*deleteFunction1)(void* toBeDeleted),int (*compareFunction1)(const void* first,const void* second), char* (*printFunction2)(void* toBePrinted),void (*deleteFunction2)(void* toBeDeleted),int (*compareFunction2)(const void* first,const void* second));
 Alarm* initAlarm(char* (*printFunction1)(void* toBePrinted),void (*deleteFunction1)(void* toBeDeleted),int (*compareFunction1)(const void* first,const void* second));
 Property* createProperty(char* line);
-void handleDTStamp(char* dt, DateTime* toChange);
+ICalErrorCode handleDTStamp(char* dt, DateTime* toChange);
 bool validEvent(Event* evt);
 bool validAlarm(Alarm* alarm);
 ICalErrorCode validCal(Calendar* cal);
