@@ -75,14 +75,24 @@ Property* createProperty(char* line) {
   return prop;
 }
 
-void handleDTStamp(char* dt, DateTime* toChange) {
+ICalErrorCode handleDTStamp(char* dt, DateTime* toChange) {
   if (endsWith(dt, "Z")) {
     (*toChange).UTC = true;
   } else {
     (*toChange).UTC = false;
   }
-  strcpy((*toChange).date, strtok(dt, "T"));
-  strcpy((*toChange).time, strtok(NULL, "Z"));
+  char* token  = strtok(dt, "T");
+  strcpy((*toChange).date, token);
+  if (strlen((*toChange).date) != 8) {
+    return INV_DT;
+  }
+  token = strtok(NULL,"Z");
+  if (token == NULL) {
+    return INV_DT;
+  }
+  strcpy((*toChange).time, token);
+
+  return OK;
 }
 
 bool validEvent(Event* evt) {
