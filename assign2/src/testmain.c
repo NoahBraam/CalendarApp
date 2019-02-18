@@ -14,6 +14,9 @@ int main(int argc, char** argv) {
     char* calS = printCalendar(cal);
     printf("%s\n", calS);
     free(calS);
+    char* calJSON = calendarToJSON(cal);
+    printf("%s\n", calJSON);
+    free(calJSON);
     char* evtJSON = eventToJSON((Event*)getFromFront(cal->events));
     printf("%s\n", evtJSON);
     free(evtJSON);

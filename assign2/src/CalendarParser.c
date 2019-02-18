@@ -760,6 +760,23 @@ char* eventToJSON(const Event* event) {
   return evtString;
 }
 
+char* eventListToJSON(const List* eventList) {
+  return NULL;
+}
+
+char* calendarToJSON(const Calendar* cal) {
+  char* calJSON;
+  if (cal == NULL) {
+    calJSON = malloc(sizeof(char) * 3);
+    strcpy(calJSON, "{}");
+  } else {
+    int len = 55 + strlen(cal->prodID);
+    calJSON = malloc(sizeof(char) * len);
+    snprintf(calJSON, len, "{\"version\":%.0lf,\"prodID\":\"%s\",\"numProps\":%d,\"numEvents\":%d}", cal->version, cal->prodID, 2+getLength(cal->properties), getLength(cal->events));
+  }
+  return calJSON;
+}
+
 //============ Helper Functions =============//
 void deleteEvent(void* toBeDeleted) {
   if (toBeDeleted == NULL) {
