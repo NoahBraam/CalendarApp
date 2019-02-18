@@ -726,6 +726,40 @@ char* dtToJSON(DateTime prop) {
   return dtString;
 }
 
+char* eventToJSON(const Event* event) {
+  char* evtString;
+  if (event == NULL) {
+    evtString = malloc(sizeof(char) * 3);
+    strcpy(evtString, "{}");
+  } else {
+    int numProps = 3 + getLength(event->properties);
+    int numAlarms = getLength(event->alarms);
+    char* dtString = dtToJSON(event->startDateTime);
+    Property* tempProp = malloc(sizeof(Property));
+    strcpy(tempProp->propName, "SUMMARY");
+    void* tempSum = NULL;
+    if (numProps > 3) {
+      tempSum = findElement(event->properties, &comparePropertiesByName, tempProp);
+    }
+    free(tempProp);
+    tempProp = NULL;
+    if (tempSum != NULL) {
+      tempProp = (Property*)tempSum;
+    }
+    if (tempProp != NULL) {
+      int len = 11 + strlen(dtString) + 43 + strlen(tempProp->propDescr);
+      evtString = malloc(sizeof(char) * len);
+      snprintf(evtString, len, "{\"startDT\":%s,\"numProps\":%d,\"numAlarms\":%d,\"summary\":\"%s\"}", dtString, numProps, numAlarms, tempProp->propDescr);
+    } else {
+      int len = 11 + strlen(dtString) + 43;
+      evtString = malloc(sizeof(char) * len);
+      snprintf(evtString, len, "{\"startDT\":%s,\"numProps\":%d,\"numAlarms\":%d,\"summary\":\"\"}", dtString, numProps, numAlarms);
+    }
+    free(dtString);
+  }
+  return evtString;
+}
+
 //============ Helper Functions =============//
 void deleteEvent(void* toBeDeleted) {
   if (toBeDeleted == NULL) {

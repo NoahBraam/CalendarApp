@@ -158,6 +158,16 @@ void writeAlarms(FILE* fp, List* alarms) {
   }
 }
 
+bool comparePropertiesByName(const void* first, const void* second) {
+  Property* prop1 = (Property*)first;
+  Property* prop2 = (Property*)second;
+
+  if (strcmp(prop1->propName, prop2->propName) == 0) {
+    return true;
+  }
+  return false;
+}
+
 // ======== String Helper Functs ======== //
 char* readLine(FILE* fp) {
   int lineStart, lineEnd;

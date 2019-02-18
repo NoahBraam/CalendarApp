@@ -22,6 +22,7 @@ bool validAlarm(Alarm* alarm);
 ICalErrorCode validCal(Calendar* cal);
 void writeProps(FILE* fp, List* props);
 void writeAlarms(FILE* fp, List* alarms);
+bool comparePropertiesByName(const void* first, const void* second);
 
 char* readLine(FILE* fp);
 bool startsWith(char* str, char* search);
