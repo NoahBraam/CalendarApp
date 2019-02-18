@@ -194,6 +194,11 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
       if (tmpCal->version == 0.0) {
         char* version = strtok(line, tok);
         version = strtok(NULL, tok);
+        if (version == NULL) {
+          err = INV_VER;
+          deleteCalendar(tmpCal);
+          return err;
+        }
         tmpCal->version = atof(version);
       } else {
         deleteCalendar(tmpCal);
@@ -212,6 +217,11 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
       if (strcmp(tmpCal->prodID, "temp") == 0) {
         char* prodID = strtok(line, tok);
         prodID = strtok(NULL, tok);
+        if (prodID == NULL) {
+          err = INV_PRODID;
+          deleteCalendar(tmpCal);
+          return err;
+        }
         strcpy(tmpCal->prodID, prodID);
       } else {
         free(line);
