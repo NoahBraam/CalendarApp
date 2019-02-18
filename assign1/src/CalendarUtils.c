@@ -46,6 +46,10 @@ Property* createProperty(char* line) {
       return NULL;
     }
   }
+  if (i == 0) {
+    free(prop);
+    return NULL;
+  }
   tempName[i] = '\0';
   int len = strlen(line) - i;
   if (len == 0) {
@@ -103,10 +107,10 @@ bool validAlarm(Alarm* alarm) {
 
 ICalErrorCode validCal(Calendar* cal) {
   if (cal->version == 0.0) {
-    return INV_VER;
+    return INV_CAL;
   }
   if (strcmp(cal->prodID, "temp") == 0) {
-    return INV_PRODID;
+    return INV_CAL;
   }
   if (getLength(cal->events) < 1) {
     return INV_CAL;
@@ -137,6 +141,7 @@ char* readLine(FILE* fp) {
   char* newLine;
   // Handle line folding
   if ((cur = fgetc(fp)) == ' ' || cur == '\t' || prev != '\r') {
+    fseek(fp, ftell(fp) + 1, SEEK_SET);
     newLine = readLine(fp);
     if (newLine == NULL) {
       free(line);

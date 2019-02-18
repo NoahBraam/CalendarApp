@@ -12,10 +12,7 @@
 
 ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
   ICalErrorCode err;
-  if (obj == NULL) {
-    err = OTHER_ERROR;
-    return err;
-  }
+
   // Set to NULL so that we don't need to if there is an error.
   *obj = NULL;
   // Filename is NULL or too short
@@ -56,6 +53,7 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
     if (line == NULL) {
       break;
     }
+    //printf("%s\n", line);
     // ======== End Read Line ======== //
 
     // ======== Start Handle Line ======== //
@@ -438,6 +436,18 @@ ICalErrorCode createCalendar(char* fileName, Calendar** obj) {
     free(line);
   }
   fclose(fp);
+  if (!endCal) {
+    err = INV_CAL;
+    if (creatingAlarm) {
+      deleteAlarm(tmpAlarm);
+    }
+    if (creatingEvent) {
+      deleteEvent(tmpEvent);
+    }
+    deleteCalendar(tmpCal);
+    tmpCal = NULL;
+    return err;
+  }
   if (cur != EOF) {
     err = INV_FILE;
     deleteCalendar(tmpCal);
