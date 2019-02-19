@@ -32,6 +32,9 @@ bool onlyValidAlarmPropNames(List* properties);
 bool validEventProperties(List* properties);
 bool onlyValidEventPropNames(List* properties);
 
+bool validCalProperties(List* properties);
+bool onlyValidCalPropNames(List* properties);
+
 char* readLine(FILE* fp);
 bool startsWith(char* str, char* search);
 bool endsWith(char* str, char* search);

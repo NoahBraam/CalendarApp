@@ -240,7 +240,7 @@ bool onlyValidEventPropNames(List* properties) {
   Property* prop;
   while ((tmpObj = nextElement(&iter)) != NULL) {
     prop = (Property*)tmpObj;
-    if (strcmp(prop->propName, "CLASS") != 0 && strcmp(prop->propName, "CREATED") != 0 && strcmp(prop->propName, "DESCRIPTION") != 0 && strcmp(prop->propName, "GEO") != 0 && strcmp(prop->propName, "LAST-MOD") != 0 && strcmp(prop->propName, "LOCATION") != 0 && strcmp(prop->propName, "ORGANIZER") != 0 && strcmp(prop->propName, "PRIORITY") != 0 && strcmp(prop->propName, "SEQ") != 0 && strcmp(prop->propName, "STATUS") != 0 &&
+    if (strcmp(prop->propName, "CLASS") != 0 && strcmp(prop->propName, "CREATED") != 0 && strcmp(prop->propName, "DESCRIPTION") != 0 && strcmp(prop->propName, "GEO") != 0 && strcmp(prop->propName, "LAST-MODIFIED") != 0 && strcmp(prop->propName, "LOCATION") != 0 && strcmp(prop->propName, "ORGANIZER") != 0 && strcmp(prop->propName, "PRIORITY") != 0 && strcmp(prop->propName, "SEQ") != 0 && strcmp(prop->propName, "STATUS") != 0 &&
         strcmp(prop->propName, "SUMMARY") != 0 && strcmp(prop->propName, "TRANSP") != 0 && strcmp(prop->propName, "URL") != 0 && strcmp(prop->propName, "RECURID") != 0 && strcmp(prop->propName, "RRULE") != 0 && strcmp(prop->propName, "DTEND") != 0 && strcmp(prop->propName, "DURATION") != 0 && strcmp(prop->propName, "ATTACH") != 0 && strcmp(prop->propName, "ATTENDEE") != 0 && strcmp(prop->propName, "CATEGORIES") != 0 &&
         strcmp(prop->propName, "COMMENT") != 0 && strcmp(prop->propName, "CONTACT") != 0 && strcmp(prop->propName, "EXDATE") != 0 && strcmp(prop->propName, "RSTATUS") != 0 && strcmp(prop->propName, "RELATED") != 0 && strcmp(prop->propName, "RESOURCES") != 0 && strcmp(prop->propName, "RDATE") != 0) {
           return false;
@@ -253,7 +253,7 @@ bool validEventProperties(List* properties) {
   if (!allPropsValid(properties)) {
     return false;
   }
-  
+
   int numDur = numPropertiesWithName(properties, "DURATION");
   int numDtEnd = numPropertiesWithName(properties, "DTEND");
   // num dtend * num duration must = 0.
@@ -262,7 +262,7 @@ bool validEventProperties(List* properties) {
   }
 
   // These are the properties that can only be there once
-  char *strs[14] = {"CLASS", "CREATED", "DESCRIPTION", "GEO", "LAST-MOD", "LOCATION", "ORGANIZER", "PRIORITY", "SEQ", "STATUS", "SUMMARY", "TRANSP", "URL", "RECURID"};
+  char *strs[14] = {"CLASS", "CREATED", "DESCRIPTION", "GEO", "LAST-MODIFIED", "LOCATION", "ORGANIZER", "PRIORITY", "SEQ", "STATUS", "SUMMARY", "TRANSP", "URL", "RECURID"};
   for (int i = 0; i<14; i++) {
     int numTimes = numPropertiesWithName(properties, strs[i]);
     if (numTimes > 1) {
@@ -270,6 +270,37 @@ bool validEventProperties(List* properties) {
     }
   }
   return onlyValidEventPropNames(properties);
+}
+
+bool onlyValidCalPropNames(List* properties) {
+  ListIterator iter = createIterator(properties);
+  void* tmpObj;
+  Property* prop;
+  while ((tmpObj = nextElement(&iter)) != NULL) {
+    prop = (Property*)tmpObj;
+    if (strcmp(prop->propName, "CALSCALE") != 0 && strcmp(prop->propName, "METHOD") != 0) {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool validCalProperties(List* properties) {
+  if (!allPropsValid(properties)) {
+    return false;
+  }
+  if (getLength(properties) > 2) {
+    return false;
+  }
+  // These are the properties that can only be there once
+  char *strs[2] = {"CALSCALE", "METHOD"};
+  for (int i = 0; i<2; i++) {
+    int numTimes = numPropertiesWithName(properties, strs[i]);
+    if (numTimes > 1) {
+      return false;
+    }
+  }
+  return onlyValidCalPropNames(properties);
 }
 
 // ======== String Helper Functs ======== //

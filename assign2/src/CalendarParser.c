@@ -660,7 +660,10 @@ ICalErrorCode validateCalendar(const Calendar* obj) {
     return err;
   }
   // Calendar property validation...
-
+  if (!validCalProperties(obj->properties)) {
+    err = INV_CAL;
+    return err;
+  }
 
   void* tmpObj;
   Event* tmpEvent;
@@ -669,16 +672,20 @@ ICalErrorCode validateCalendar(const Calendar* obj) {
     tmpEvent = (Event*)tmpObj;
     if (strlen(tmpEvent->UID) > 1000 || strcmp(tmpEvent->UID, "") == 0) {
       err = INV_EVENT;
+      return err;
     }
     if (tmpEvent->properties == NULL) {
       err = INV_EVENT;
+      return err;
     } else {
       if (!validEventProperties(tmpEvent->properties)) {
         err = INV_EVENT;
+        return err;
       }
     }
     if (tmpEvent->alarms == NULL) {
       err = INV_EVENT;
+      return err;
     } else {
       Alarm* tmpAlarm;
       ListIterator almIter = createIterator(tmpEvent->alarms);
@@ -687,23 +694,28 @@ ICalErrorCode validateCalendar(const Calendar* obj) {
         tmpAlarm = (Alarm*)tmpObj;
         if (strlen(tmpAlarm->action) > 200 || strcmp(tmpAlarm->action, "") == 0) {
           err = INV_ALARM;
+          return err;
         }
         if (tmpAlarm->trigger == NULL) {
           err = INV_ALARM;
+          return err;
         } else if (strcmp(tmpAlarm->trigger, "") == 0) {
           err = INV_ALARM;
+          return err;
         }
         if (tmpAlarm->properties == NULL) {
           err = INV_ALARM;
+          return err;
         } else {
           if (!validAlarmProperties(tmpAlarm->properties)) {
             err = INV_ALARM;
+            return err;
           }
         }
       }
     }
   }
-  return err;
+  return OK;
 }
 
 void addEvent(Calendar* cal, Event* toBeAdded) {
