@@ -804,6 +804,66 @@ char* calendarToJSON(const Calendar* cal) {
   return calJSON;
 }
 
+Calendar* JSONtoCalendar(const char* str) {
+  if (str == NULL) {
+    return NULL;
+  }
+  int len = strlen((char*)str);
+  char* tmpStr = malloc(sizeof(char) * len +1);
+  strcpy(tmpStr, str);
+
+  if (!startsWith(tmpStr, "{\"version\":") || !endsWith(tmpStr, "\"}")) {
+    free(tmpStr);
+    return NULL;
+  }
+  char* token = strtok(tmpStr, ":");
+  token = strtok(NULL, ",");
+  float version = atof(token);
+  token = strtok(NULL, ":");
+  if (strcmp(token, "\"prodID\"") != 0) {
+    free(tmpStr);
+    return NULL;
+  }
+  token = strtok(NULL, "\"");
+  token = strtok(NULL, "\"");
+
+  Calendar* cal = initCal(&printEvent, &deleteEvent, &compareEvents, &printProperty, &deleteProperty, &compareProperties);
+  cal->version = version;
+  strcpy(cal->prodID, token);
+
+  free(tmpStr);
+  return cal;
+}
+
+Event* JSONtoEvent(const char* str) {
+  if (str == NULL) {
+    return NULL;
+  }
+  int len = strlen((char*)str);
+  char* tmpStr = malloc(sizeof(char) * len +1);
+  strcpy(tmpStr, str);
+
+  if (!startsWith(tmpStr, "{\"UID\":") || !endsWith(tmpStr, "\"}")) {
+    free(tmpStr);
+    return NULL;
+  }
+  char* token = strtok(tmpStr, ":");
+  token = strtok(NULL, "\"");
+  token = strtok(NULL, "\"");
+  if (token == NULL) {
+    free(tmpStr);
+    return NULL;
+  }
+  Event* evt = malloc(sizeof(Event));
+  evt->properties = initializeList(&printProperty, &deleteProperty, &compareProperties);
+  evt->alarms = initializeList(&printAlarm, &deleteAlarm, &compareAlarms);
+  strcpy(evt->UID, token);
+
+  free(tmpStr);
+
+  return evt;
+}
+
 //============ Helper Functions =============//
 void deleteEvent(void* toBeDeleted) {
   if (toBeDeleted == NULL) {
