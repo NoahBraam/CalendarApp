@@ -241,7 +241,7 @@ bool onlyValidEventPropNames(List* properties) {
   while ((tmpObj = nextElement(&iter)) != NULL) {
     prop = (Property*)tmpObj;
     if (strcmp(prop->propName, "CLASS") != 0 && strcmp(prop->propName, "CREATED") != 0 && strcmp(prop->propName, "DESCRIPTION") != 0 && strcmp(prop->propName, "GEO") != 0 && strcmp(prop->propName, "LAST-MODIFIED") != 0 && strcmp(prop->propName, "LOCATION") != 0 && strcmp(prop->propName, "ORGANIZER") != 0 && strcmp(prop->propName, "PRIORITY") != 0 && strcmp(prop->propName, "SEQ") != 0 && strcmp(prop->propName, "STATUS") != 0 &&
-        strcmp(prop->propName, "SUMMARY") != 0 && strcmp(prop->propName, "TRANSP") != 0 && strcmp(prop->propName, "URL") != 0 && strcmp(prop->propName, "RECURRANCE-ID") != 0 && strcmp(prop->propName, "RRULE") != 0 && strcmp(prop->propName, "DTEND") != 0 && strcmp(prop->propName, "DURATION") != 0 && strcmp(prop->propName, "ATTACH") != 0 && strcmp(prop->propName, "ATTENDEE") != 0 && strcmp(prop->propName, "CATEGORIES") != 0 &&
+        strcmp(prop->propName, "SUMMARY") != 0 && strcmp(prop->propName, "TRANSP") != 0 && strcmp(prop->propName, "URL") != 0 && strcmp(prop->propName, "RECURRENCE-ID") != 0 && strcmp(prop->propName, "RRULE") != 0 && strcmp(prop->propName, "DTEND") != 0 && strcmp(prop->propName, "DURATION") != 0 && strcmp(prop->propName, "ATTACH") != 0 && strcmp(prop->propName, "ATTENDEE") != 0 && strcmp(prop->propName, "CATEGORIES") != 0 &&
         strcmp(prop->propName, "COMMENT") != 0 && strcmp(prop->propName, "CONTACT") != 0 && strcmp(prop->propName, "EXDATE") != 0 && strcmp(prop->propName, "RSTATUS") != 0 && strcmp(prop->propName, "RELATED") != 0 && strcmp(prop->propName, "RESOURCES") != 0 && strcmp(prop->propName, "RDATE") != 0) {
           return false;
         }
