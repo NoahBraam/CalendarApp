@@ -23,11 +23,14 @@ ICalErrorCode validCal(Calendar* cal);
 void writeProps(FILE* fp, List* props);
 void writeAlarms(FILE* fp, List* alarms);
 bool comparePropertiesByName(const void* first, const void* second);
-bool allPropDescriptionsValid(List* properties);
+bool allPropsValid(List* properties);
 int numPropertiesWithName(List* properties, char* name);
 
 bool validAlarmProperties(List* properties);
-bool onlyValidPropNames(List* properties);
+bool onlyValidAlarmPropNames(List* properties);
+
+bool validEventProperties(List* properties);
+bool onlyValidEventPropNames(List* properties);
 
 char* readLine(FILE* fp);
 bool startsWith(char* str, char* search);
