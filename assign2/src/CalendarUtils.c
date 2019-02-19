@@ -168,6 +168,56 @@ bool comparePropertiesByName(const void* first, const void* second) {
   return false;
 }
 
+bool allPropDescriptionsValid(List* properties) {
+  ListIterator iter = createIterator(properties);
+  void* tmpObj;
+  Property* prop;
+  while ((tmpObj = nextElement(&iter)) != NULL) {
+    prop = (Property*)tmpObj;
+    if (prop->propDescr == NULL) {
+      return false;
+    }
+    if (strcmp(prop->propDescr, "") == 0) {
+      return false;
+    }
+  }
+  return true;
+}
+
+int numPropertiesWithName(List* properties, char* name) {
+  int numMatches = 0;
+  ListIterator iter = createIterator(properties);
+  void* tmpObj;
+  Property* prop;
+  while ((tmpObj = nextElement(&iter)) != NULL) {
+    prop = (Property*)tmpObj;
+    if (strcmp(prop->propName, name) == 0) {
+      numMatches++;
+    }
+  }
+  return numMatches;
+}
+
+bool validAlarmProperties(List* properties) {
+  if (!allPropDescriptionsValid(properties)) {
+    return false;
+  }
+  int numDur = numPropertiesWithName(properties, "DURATION");
+  int numRepeat = numPropertiesWithName(properties, "REPEAT");
+  if (numDur != numRepeat || numDur > 1) {
+    return false;
+  } 
+  int numAttach = numPropertiesWithName(properties, "ATTACH");
+  if (numAttach > 1) {
+    return false;
+  }
+  int propLen = getLength(properties);
+  if (propLen != 0 && propLen != 1 && propLen != 3) {
+    return false;
+  }
+  return true;
+}
+
 // ======== String Helper Functs ======== //
 char* readLine(FILE* fp) {
   int lineStart, lineEnd;

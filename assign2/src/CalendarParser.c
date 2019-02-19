@@ -695,7 +695,9 @@ ICalErrorCode validateCalendar(const Calendar* obj) {
         if (tmpAlarm->properties == NULL) {
           err = INV_ALARM;
         } else {
-          // Alarm property validation, later issue.
+          if (!validAlarmProperties(tmpAlarm->properties)) {
+            err = INV_ALARM;
+          }
         }
       }
     }
