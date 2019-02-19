@@ -27,6 +27,7 @@ bool allPropDescriptionsValid(List* properties);
 int numPropertiesWithName(List* properties, char* name);
 
 bool validAlarmProperties(List* properties);
+bool onlyValidPropNames(List* properties);
 
 char* readLine(FILE* fp);
 bool startsWith(char* str, char* search);

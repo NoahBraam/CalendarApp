@@ -198,6 +198,19 @@ int numPropertiesWithName(List* properties, char* name) {
   return numMatches;
 }
 
+bool onlyValidPropNames(List* properties) {
+  ListIterator iter = createIterator(properties);
+  void* tmpObj;
+  Property* prop;
+  while ((tmpObj = nextElement(&iter)) != NULL) {
+    prop = (Property*)tmpObj;
+    if (strcmp(prop->propName, "DURATION") != 0 && strcmp(prop->propName, "REPEAT") != 0 && strcmp(prop->propName, "ATTACH") != 0) {
+      return false;
+    }
+  }
+  return true;
+}
+
 bool validAlarmProperties(List* properties) {
   if (!allPropDescriptionsValid(properties)) {
     return false;
@@ -212,10 +225,10 @@ bool validAlarmProperties(List* properties) {
     return false;
   }
   int propLen = getLength(properties);
-  if (propLen != 0 && propLen != 1 && propLen != 3) {
+  if (propLen > 3) {
     return false;
   }
-  return true;
+  return onlyValidPropNames(properties);
 }
 
 // ======== String Helper Functs ======== //
