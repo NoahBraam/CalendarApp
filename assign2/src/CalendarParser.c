@@ -761,7 +761,34 @@ char* eventToJSON(const Event* event) {
 }
 
 char* eventListToJSON(const List* eventList) {
-  return NULL;
+  char* eventListString;
+  if (eventList == NULL) {
+    eventListString = malloc(sizeof(char) * 3);
+    strcpy(eventListString, "[]");
+  } else if (getLength((List*)eventList) == 0) {
+    eventListString = malloc(sizeof(char) * 3);
+    strcpy(eventListString, "[]");
+  } else {
+    int totalLen = 3;
+    eventListString = malloc(sizeof(char) * totalLen);
+    strcpy(eventListString, "[");
+    ListIterator iter = createIterator((List*)eventList);
+    void* tmpObj;
+    Event* tmpEvent;
+    while((tmpObj = nextElement(&iter)) != NULL) {
+      tmpEvent = (Event*)tmpObj;
+      char* evtString = eventToJSON(tmpEvent);
+      totalLen+=(strlen(evtString) + 1);
+      eventListString = realloc(eventListString, sizeof(char) * totalLen);
+      if (strcmp(eventListString, "[") != 0) {
+        strcat(eventListString, ",");
+      }
+      strcat(eventListString, evtString);
+      free(evtString);
+    }
+    strcat(eventListString, "]");
+  }
+  return eventListString;
 }
 
 char* calendarToJSON(const Calendar* cal) {
