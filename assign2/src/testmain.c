@@ -9,6 +9,9 @@ int main(int argc, char** argv) {
   char* err = printError(createCalendar(argv[1], &cal));
   printf("%s\n", err);
   free(err);
+  err = printError(validateCalendar(cal));
+  printf("%s\n", err);
+  free(err);
   if (cal != NULL) {
     writeCalendar("test.ics", cal);
     char* calS = printCalendar(cal);
