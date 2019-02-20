@@ -25,4 +25,13 @@ int main(int argc, char** argv) {
     free(evtJSON);
     deleteCalendar(cal);
   }
+  char* jsonCal = malloc(sizeof(char) * 70);
+  strcpy(jsonCal, "{\"version\":2,\"prodID\":\"1234567\"}");
+  printf("%s\n", jsonCal);
+  cal = JSONtoCalendar(jsonCal);
+  char* tmp = printCalendar(cal);
+  printf("%s\n", tmp);
+  deleteCalendar(cal);
+  free(tmp);
+  free(jsonCal);
 }

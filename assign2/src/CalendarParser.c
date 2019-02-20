@@ -840,7 +840,6 @@ Calendar* JSONtoCalendar(const char* str) {
     return NULL;
   }
   token = strtok(NULL, "\"");
-  token = strtok(NULL, "\"");
 
   Calendar* cal = initCal(&printEvent, &deleteEvent, &compareEvents, &printProperty, &deleteProperty, &compareProperties);
   cal->version = version;
