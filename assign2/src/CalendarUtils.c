@@ -257,7 +257,7 @@ bool validEventProperties(List* properties) {
   int numDur = numPropertiesWithName(properties, "DURATION");
   int numDtEnd = numPropertiesWithName(properties, "DTEND");
   // num dtend * num duration must = 0.
-  if ((numDur * numDtEnd) != 0 || numDur > 1 || numDtEnd > 1) {
+  if ((numDur * numDtEnd) != 0) {
     return false;
   }
 
