@@ -2,3 +2,5 @@
 testmain
 *.so
 test.ics
+*.pdf
+*.DS_Store
