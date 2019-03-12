@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Calendar Management</title>
+    <title>Calendar Management App</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="A calendar file management tool.">
@@ -33,6 +33,28 @@
             <input type='submit' class="btn btn-secondary">
         </div>
     </form>
+
+    <textarea name="statuspanel" rows="4" cols="50">
+        Test stuff.
+    </textarea>
+
+    <table id='filelog' style="width:70%">
+        <tr>
+            <th>File Name</th>
+            <th>Version</th>
+            <th>Product ID</th>
+            <th>No. of Events</th>
+            <th>No. of Properties</th>
+        </tr>
+        <tr>
+
+        </tr>
+    </table>
+    <hr>
+
+    <select name="File Name">
+        <option value="test">test.ics</option>
+    </select>
     <!-- Leave me at the bottom of body -->
     <script src="/index.js"></script>
 </body>
