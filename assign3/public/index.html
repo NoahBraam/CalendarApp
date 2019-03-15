@@ -34,9 +34,13 @@
         </div>
     </form>
 
-    <textarea name="statuspanel" rows="4" cols="50">
-        Test stuff.
-    </textarea>
+    <div id ="status">
+        <textarea readonly id="statuspanel" name="statuspanel" rows="4" cols="50">
+            Test stuff.
+        </textarea>
+        <p>
+        <input id="clear" type='submit' class="btn btn-secondary" value="Clear">
+    </div>
 
     <table id='filelog' style="width:70%">
         <tr>
@@ -52,7 +56,8 @@
     </table>
     <hr>
 
-    <select name="File Name">
+    <select id="selectFile" name="selectFile">
+        <option value="" disabled selected>Select file</option>
         <option value="test">test.ics</option>
     </select>
 
@@ -74,6 +79,9 @@
             <td>4</td>
             <td>2</td>
             <td><a href="idkStuff">Show Alarms</a><p><a href="moreStuff">Show Props</a></td>
+        </tr>
+        <tr>
+
         </tr>
     </table>
     <!-- Leave me at the bottom of body -->

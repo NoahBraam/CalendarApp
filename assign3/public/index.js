@@ -29,4 +29,16 @@ $(document).ready(function() {
         //Pass data to the Ajax call, so it gets passed to the 
         $.ajax({});
     });
+
+    $('#clear').on("click", function(e){
+        $('#statuspanel').val("");
+        e.preventDefault();
+        //Pass data to the Ajax call, so it gets passed to the 
+        $.ajax({});
+    });
+
+    $('#selectFile').on("change", function(event) {
+        console.log("i did a thing");
+        //$.ajax({});
+    });
 });
