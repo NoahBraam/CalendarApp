@@ -45,7 +45,7 @@ app.post('/upload', function(req, res) {
   }
  
   let uploadFile = req.files.uploadFile;
- 
+  console.log(req.files);
   // Use the mv() method to place the file somewhere on your server
   uploadFile.mv('uploads/' + uploadFile.name, function(err) {
     if(err) {
@@ -74,6 +74,17 @@ app.get('/uploads/:name', function(req , res){
 app.get('/someendpoint', function(req , res){
   res.send({
     foo: "bar"
+  });
+});
+
+app.get('/filenames', function(req, res) {
+  var fileNames = [];
+  fs.readdirSync('./uploads/').forEach(file => {
+    fileNames.push(file);
+  });
+  res.send({
+    numFiles: fileNames.length,
+    files: fileNames
   });
 });
 

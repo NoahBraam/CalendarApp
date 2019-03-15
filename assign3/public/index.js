@@ -37,8 +37,31 @@ $(document).ready(function() {
         $.ajax({});
     });
 
+    // $('#uploadcal').on('click', function() {
+    //     $('#file-input').trigger('click');
+    // });
+
     $('#selectFile').on("change", function(event) {
         console.log("i did a thing");
         //$.ajax({});
     });
+
+    $.ajax({
+        type: 'get',
+        dataType: 'json',
+        url: '/filenames',
+        success: function (data) {
+            for (i = 0; i<data.numFiles; i++) {
+                console.log(data.files[i]);
+                if (data.files[i].endsWith(".ics")) {
+                    $("#selectFile").append(new Option(data.files[i], ""+i+""));
+                }
+            }
+
+        },
+        fail: function(error) {
+            // Non-200 return, do something with error
+            console.log(error); 
+        }
+    })
 });

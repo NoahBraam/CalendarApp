@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Calendar Management App</title>
+    <title>Calendar Viewer</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="A calendar file management tool.">
@@ -54,11 +54,18 @@
 
         </tr>
     </table>
+    <form ref='uploadForm' 
+        id='uploadForm' 
+        action='/upload' 
+        method='post' 
+        encType="multipart/form-data">
+            <input id="file-input" type="file" name="uploadFile" />
+            <input id="uploadcal" type='submit' class="btn btn-secondary" value="Upload File">
+    </form>
     <hr>
 
     <select id="selectFile" name="selectFile">
         <option value="" disabled selected>Select file</option>
-        <option value="test">test.ics</option>
     </select>
 
     <table id='calendarview' style="width:70%">
