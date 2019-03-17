@@ -93,11 +93,10 @@ app.get('/filenames', function(req, res) {
 });
 
 app.get('/parsefileReturnCal', function(req, res) {
-  console.log(req.query);
-  //console.log(req);
-  var calJSON = libcal.parseCalReturnJSON(req.query.filename);
-  console.log(calJSON);
-  res.send(JSON.parse(calJSON));
+  var calJSON = libcal.parseCalReturnJSON(path.join(__dirname+'/uploads/' + req.query.filename));
+  var json = JSON.parse(calJSON);
+  json.filename = req.query.filename;
+  res.send(json);
 });
 
 app.listen(portNum);

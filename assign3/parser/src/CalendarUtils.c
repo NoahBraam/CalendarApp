@@ -373,13 +373,13 @@ bool endsWith(char* str, char* search) {
 
 char* parseCalReturnJSON(char* file) {
   int len = strlen(file);
-  char* filePath = malloc(sizeof(char) * (len+15));
+  //char* filePath = malloc(sizeof(char) * (len+15));
   int num = 0;
-  strcpy(filePath, "uploads/");
-  strcat(filePath, file);
+  // strcpy(filePath, "./uploads/");
+  // strcat(filePath, file);
   Calendar* cal;
-  ICalErrorCode err = createCalendar(filePath, &cal);
-  free(filePath);
+  ICalErrorCode err = createCalendar(file, &cal);
+  //free(filePath);
   if (err == OK) {
     err = validateCalendar(cal);
     if (err == OK) {

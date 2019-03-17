@@ -37,10 +37,6 @@ $(document).ready(function() {
         $.ajax({});
     });
 
-    // $('#uploadcal').on('click', function() {
-    //     $('#file-input').trigger('click');
-    // });
-
     $('#selectFile').on("change", function(event) {
         console.log("i did a thing");
         //$.ajax({});
@@ -61,16 +57,16 @@ $(document).ready(function() {
                         data: {
                             filename : data.files[i]
                         },
-                        success: function(data) {
-                            return data;
+                        success: function(resp) {
+                            console.log(resp);
+                            $("#selectFile").append(new Option(resp.filename, ""+resp.filename+""));
+                            var htmlRow = `<tr><td><a href = "/uploads/${resp.filename}">${resp.filename}</a></td><td>${resp.version}</td><td>${resp.prodID}</td><td>${resp.numEvents}</td><td>${resp.numProps}</td></tr>`;
+                            $('#filelog tr:last').after(htmlRow);
                         },
                         fail: function(error) {
                             return error;
                         }
                     });
-                    $("#selectFile").append(new Option(data.files[i], ""+i+""));
-                    var htmlRow = `<tr><td><a href = "/uploads/${data.files[i]}">${data.files[i]}</a></td><td>${caldata.version}</td><td>${caldata.prodID}</td><td>${caldata.numEvents}</td><td>${caldata.numProps}</td></tr>`;
-                    $('#filelog tr:last').after(htmlRow);
                 }
             }
 
