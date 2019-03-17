@@ -10,7 +10,8 @@ const path    = require("path");
 const fileUpload = require('express-fileupload');
 
 const libcal = ffi.Library('./libcal', {
-  'parseCalReturnJSON' : ['string', ['string'] ]
+  'parseCalReturnJSON' : ['string', ['string'] ],
+  'parseCalReturnEvents' : ['string', ['string'] ]
 });
 
 app.use(fileUpload());
@@ -96,6 +97,12 @@ app.get('/parsefileReturnCal', function(req, res) {
   var calJSON = libcal.parseCalReturnJSON(path.join(__dirname+'/uploads/' + req.query.filename));
   var json = JSON.parse(calJSON);
   json.filename = req.query.filename;
+  res.send(json);
+});
+
+app.get('/getEventList', function (req, res) {
+  var evtJSON = libcal.parseCalReturnEvents(path.join(__dirname+'/uploads/' + req.query.filename));
+  var json = JSON.parse(evtJSON);
   res.send(json);
 });
 

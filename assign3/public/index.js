@@ -38,8 +38,32 @@ $(document).ready(function() {
     });
 
     $('#selectFile').on("change", function(event) {
-        console.log("i did a thing");
-        //$.ajax({});
+        console.log($('#selectFile').val());
+        $.ajax({
+            trpe: 'get',
+            dataType: 'json',
+            url: '/getEventList',
+            data: {
+                filename: $('#selectFile').val()
+            },
+            success: function (data) {
+                console.log(data);
+                $("#calendarview td").parent().remove();
+                for (i = 0; i<data.length; i++) {
+                    datStr = data[i].startDT.date;
+                    timeStr = data[i].startDT.time;
+                    if (data[i].startDT.UTC) {
+                        timeStr += " (UTC)";
+                    }
+                    var htmlRow = `<tr><td>${i+1}</td><td>${datStr}</td><td>${timeStr}</td><td>${data[i].summary}</td><td>${data[i].numProps}</td><td>${data[i].numAlarms}</td><td><a href="idkStuff">Show Alarms</a><p><a href="moreStuff">Show Props</a></td></tr>`;
+                    $('#calendarview tr:last').after(htmlRow);
+                }
+            },
+            fail: function (error) {
+                // Non-200 return, do something with error
+                console.log(error);
+            }
+        });
     });
 
     $.ajax({
@@ -49,8 +73,7 @@ $(document).ready(function() {
         success: function (data) {
             for (i = 0; i<data.numFiles; i++) {
                 if (data.files[i].endsWith(".ics")) {
-                    console.log(data.files[i]);
-                    var caldata = $.ajax({
+                    $.ajax({
                         type: 'get',
                         dataType: 'json',
                         url: '/parsefileReturnCal',
@@ -64,7 +87,8 @@ $(document).ready(function() {
                             $('#filelog tr:last').after(htmlRow);
                         },
                         fail: function(error) {
-                            return error;
+                            // Non-200 return, do something with error
+                            console.log(error);
                         }
                     });
                 }

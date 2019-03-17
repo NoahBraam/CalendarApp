@@ -40,5 +40,6 @@ bool startsWith(char* str, char* search);
 bool endsWith(char* str, char* search);
 
 char* parseCalReturnJSON(char* file);
+char* parseCalReturnEvents(char* file);
 
 #endif

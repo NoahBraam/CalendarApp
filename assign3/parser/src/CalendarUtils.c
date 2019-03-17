@@ -373,13 +373,9 @@ bool endsWith(char* str, char* search) {
 
 char* parseCalReturnJSON(char* file) {
   int len = strlen(file);
-  //char* filePath = malloc(sizeof(char) * (len+15));
   int num = 0;
-  // strcpy(filePath, "./uploads/");
-  // strcat(filePath, file);
   Calendar* cal;
   ICalErrorCode err = createCalendar(file, &cal);
-  //free(filePath);
   if (err == OK) {
     err = validateCalendar(cal);
     if (err == OK) {
@@ -397,5 +393,24 @@ char* parseCalReturnJSON(char* file) {
 
   len = strlen(errString) + 30;
   snprintf(finalJSON, len, "{\"err\": \"%s\", \"num\": %d }", errString, num);
+  return finalJSON;
+}
+
+char* parseCalReturnEvents(char* file) {
+  Calendar* cal;
+  ICalErrorCode err = createCalendar(file, &cal);
+  if (err == OK) {
+    err = validateCalendar(cal);
+    if (err == OK) {
+      char* evtJSON = eventListToJSON(cal->events);
+      deleteCalendar(cal);
+      return evtJSON;
+    }
+  }
+  char* errString = printError(err);
+  char* finalJSON = malloc(sizeof(char) * 30 + strlen(errString));
+
+  int len = strlen(errString) + 30;
+  snprintf(finalJSON, len, "{\"err\": \"%s\", \"num\": %d }", errString, 1);
   return finalJSON;
 }
