@@ -674,6 +674,9 @@ ICalErrorCode validateCalendar(const Calendar* obj) {
       err = INV_EVENT;
       return err;
     }
+    if (strlen(tmpEvent->startDateTime.date) < 8 || strlen(tmpEvent->creationDateTime.date) < 8 || strlen(tmpEvent->startDateTime.time) < 6 || strlen(tmpEvent->creationDateTime.time) < 6) {
+      return INV_EVENT;
+    }
     if (tmpEvent->properties == NULL) {
       err = INV_EVENT;
       return err;
@@ -862,7 +865,6 @@ Event* JSONtoEvent(const char* str) {
     return NULL;
   }
   char* token = strtok(tmpStr, ":");
-  token = strtok(NULL, "\"");
   token = strtok(NULL, "\"");
   if (token == NULL) {
     free(tmpStr);
