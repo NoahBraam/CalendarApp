@@ -370,3 +370,32 @@ bool endsWith(char* str, char* search) {
   }
   return ends;
 }
+
+char* parseCalReturnJSON(char* file) {
+  int len = strlen(file);
+  char* filePath = malloc(sizeof(char) * (len+15));
+  int num = 0;
+  strcpy(filePath, "uploads/");
+  strcat(filePath, file);
+  Calendar* cal;
+  ICalErrorCode err = createCalendar(filePath, &cal);
+  free(filePath);
+  if (err == OK) {
+    err = validateCalendar(cal);
+    if (err == OK) {
+      char* calJSON = calendarToJSON(cal);
+      deleteCalendar(cal);
+      return calJSON;
+    } else {
+      num = 2;
+    }
+  } else {
+    num = 1;
+  }
+  char* errString = printError(err);
+  char* finalJSON = malloc(sizeof(char) * 30 + strlen(errString));
+
+  len = strlen(errString) + 30;
+  snprintf(finalJSON, len, "{\"err\": \"%s\", \"num\": %d }", errString, num);
+  return finalJSON;
+}

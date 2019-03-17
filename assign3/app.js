@@ -9,6 +9,10 @@ const app     = express();
 const path    = require("path");
 const fileUpload = require('express-fileupload');
 
+const libcal = ffi.Library('./libcal', {
+  'parseCalReturnJSON' : ['string', ['string'] ]
+});
+
 app.use(fileUpload());
 
 // Minimization
@@ -86,6 +90,14 @@ app.get('/filenames', function(req, res) {
     numFiles: fileNames.length,
     files: fileNames
   });
+});
+
+app.get('/parsefileReturnCal', function(req, res) {
+  console.log(req.query);
+  //console.log(req);
+  var calJSON = libcal.parseCalReturnJSON(req.query.filename);
+  console.log(calJSON);
+  res.send(JSON.parse(calJSON));
 });
 
 app.listen(portNum);

@@ -52,9 +52,25 @@ $(document).ready(function() {
         url: '/filenames',
         success: function (data) {
             for (i = 0; i<data.numFiles; i++) {
-                console.log(data.files[i]);
                 if (data.files[i].endsWith(".ics")) {
+                    console.log(data.files[i]);
+                    var caldata = $.ajax({
+                        type: 'get',
+                        dataType: 'json',
+                        url: '/parsefileReturnCal',
+                        data: {
+                            filename : data.files[i]
+                        },
+                        success: function(data) {
+                            return data;
+                        },
+                        fail: function(error) {
+                            return error;
+                        }
+                    });
                     $("#selectFile").append(new Option(data.files[i], ""+i+""));
+                    var htmlRow = `<tr><td><a href = "/uploads/${data.files[i]}">${data.files[i]}</a></td><td>${caldata.version}</td><td>${caldata.prodID}</td><td>${caldata.numEvents}</td><td>${caldata.numProps}</td></tr>`;
+                    $('#filelog tr:last').after(htmlRow);
                 }
             }
 

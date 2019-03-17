@@ -542,37 +542,37 @@ char* printError(ICalErrorCode err) {
   char* str;
   if (err == OK) {
     str = malloc(sizeof(char) * 4);
-    strcpy(str, "OK\n");
+    strcpy(str, "OK");
   } else if (err == INV_CAL) {
     str = malloc(sizeof(char) * 20);
-    strcpy(str, "Invalid Calendar\n");
+    strcpy(str, "Invalid Calendar");
   } else if (err == INV_VER) {
     str = malloc(sizeof(char) * 20);
-    strcpy(str, "Invalid Version\n");
+    strcpy(str, "Invalid Version");
   } else if (err == DUP_VER) {
     str = malloc(sizeof(char) * 21);
-    strcpy(str, "Duplicate Version\n");
+    strcpy(str, "Duplicate Version");
   } else if (err == INV_PRODID) {
     str = malloc(sizeof(char) * 22);
-    strcpy(str, "Invalid Product ID\n");
+    strcpy(str, "Invalid Product ID");
   } else if (err == DUP_PRODID) {
     str = malloc(sizeof(char) * 24);
-    strcpy(str, "Duplicate Product ID\n");
+    strcpy(str, "Duplicate Product ID");
   } else if (err == INV_EVENT) {
     str = malloc(sizeof(char) * 20);
-    strcpy(str, "Invalid Event\n");
+    strcpy(str, "Invalid Event");
   } else if (err == INV_DT) {
     str = malloc(sizeof(char) * 24);
-    strcpy(str, "Invalid Date Time\n");
+    strcpy(str, "Invalid Date Time");
   } else if (err == INV_ALARM) {
     str = malloc(sizeof(char) * 18);
-    strcpy(str, "Invalid Alarm\n");
+    strcpy(str, "Invalid Alarm");
   } else if (err == INV_FILE){
     str = malloc(sizeof(char) * 14);
-    strcpy(str, "Invalid File\n");
+    strcpy(str, "Invalid File");
   } else {
     str = malloc(sizeof(char) * 15);
-    strcpy(str, "Other Error\n");
+    strcpy(str, "Other Error");
   }
   return str;
 }
