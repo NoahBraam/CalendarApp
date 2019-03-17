@@ -15,4 +15,4 @@ parser: src/CalendarParser.c include/CalendarParser.h include/LinkedListAPI.h in
 	$(CC) CalendarParser.o CalendarUtils.o -shared -o ../libcal.so
 
 clean:
-	rm -rf bin/*.o bin/*.so
+	rm -rf *.o ../*.so
