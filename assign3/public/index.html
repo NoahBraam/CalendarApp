@@ -17,30 +17,13 @@
     <!-- Custom CSS End -->
 </head>
 <body>
-    <h3>Download test</h3>
-    If the A3 stub is running and testCalSimpleUTC.ics exists in the uploads/ directory on the server, then clicking on the link below will download it from the server.<br>
-    <a href="/uploads/testCalSimpleUTC.ics">testCalSimpleUTC.ics</a>
-    <hr>
-    <div id="blah">I am blah</div>
-    <hr>
-    <form ref='someform'
-          id='someform'>
-          <div class="form-group">
-                <label for="entryBox">Last Name</label>
-                <input type="text" class="form-control" id="entryBox" value="Value" placeholder="Placeholder">
-            </div>
-        <div class="form-group">
-            <input type='submit' class="btn btn-secondary">
-        </div>
-    </form>
-
     <div id ="status">
         <textarea readonly id="statuspanel" name="statuspanel" rows="4" cols="50">
-            Test stuff.
         </textarea>
         <p>
         <input id="clear" type='submit' class="btn btn-secondary" value="Clear">
     </div>
+    <hr>
 
     <table id='filelog' style="width:70%">
         <tr>
@@ -56,7 +39,7 @@
         action='/upload' 
         method='post' 
         encType="multipart/form-data">
-            <input id="file-input" type="file" name="uploadFile" />
+            <input id="file-input" type="file" name="uploadFile" accept=".ics"/>
             <input id="uploadcal" type='submit' class="btn btn-secondary" value="Upload File">
     </form>
     <hr>
@@ -76,18 +59,77 @@
             <th>Actions</th>
         </tr>
         <tr>
-            <td>-1</td>
-            <td>1000/04/20</td>
-            <td>4:20 AM (UTC)</td>
-            <td>Do some stuff idk.</td>
-            <td>4</td>
-            <td>2</td>
-            <td><a href="idkStuff">Show Alarms</a><p><a href="moreStuff">Show Props</a></td>
-        </tr>
-        <tr>
-
+            <td>No File Selected</td>
         </tr>
     </table>
+    <hr>
+    <form id="calEvtForm">
+        <section>
+            <h3>Create Calendar</h3>
+            <p>
+                <label for="filename">
+                    <span>Filename: </span>
+                    <strong><abbr title="Required">*</abbr></strong>
+                </label>
+                <input type="text" id="filename" name="userfile" placeholder="*.ics" required>
+            </p>
+            <p>
+                <label for="version">
+                    <span>Version: </span>
+                    <strong><abbr title="Required">*</abbr></strong>
+                </label>
+                <input type="number" id="version" name="version_no" placeholder="2.0" required>
+                
+            </p>
+            <p>
+                <label for="prodid">
+                    <span>Product ID: </span>
+                    <strong><abbr title="Required">*</abbr></strong>
+                </label>
+                <input type="text" id="prodid" name="prodid" placeholder="SomeID" required>
+            </p>
+            <p>
+                <button type="submit" id="createCalBtn" class="btn btn-secondary">Create Calendar</button>
+            </p>
+        </section>
+        <section>
+            <h3>Create Event</h3>
+            <p>
+                <span>Choose File: </span>
+                <select id="createFileSelect">
+                    <option value="new">New Calendar</option>
+                </select>
+            </p>
+            <p>
+                <label for="uid">
+                    <span>UID: </span>
+                    <strong><abbr title="Required">*</abbr></strong>
+                </label>
+                <input type="text" id="uid" name="evtUID" placeholder="someUID" required>
+            </p>
+            <p>
+                <label for="dtstart">
+                    <span>Starting Date-Time: </span>
+                    <strong><abbr title="Required">*</abbr></strong>
+                    <span class="validity"></span>
+                </label>
+                <input type="datetime-local" id="dtstart" name="startDT" placeholder="yyyy-mm-ddThh:mm" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}" required>
+                <label for="creationDT">
+                    <span>Creation Date-Time: </span>
+                    <strong><abbr title="Required">*</abbr></strong>
+                    <span class="validity"></span>
+                </label>
+                <input type="datetime-local" id="creationdt" name="createDT" placeholder="yyyy-mm-ddThh:mm" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}" required>
+            </p>
+            <p>
+                <label for="summary">
+                    <span>Summary: </span>
+                </label>
+                <input type="text" id="summary" name="summary">
+            </p>
+            <p><button id="createEvtBtn" type="submit" class="btn btn-secondary" disabled="disabled">Create Event</button></p>
+        </section>
+    </form>
     <!-- Leave me at the bottom of body -->
     <script src="/index.js"></script>
 </body>
