@@ -502,3 +502,85 @@ char* newCalendarFile(char* filename, char* calJSON, char* evtJSON, char* create
   free(errString);
   return finalJSON;
 }
+
+char* propertyToJSON(const Property* prop) {
+  Property* tmpProp = (Property*) prop;
+  int len = strlen(tmpProp->propName) + strlen(tmpProp->propDescr) + 45;
+
+  char* propJSON = malloc(sizeof(char) * len);
+  snprintf(propJSON, len, "{\"name\":\"%s\",\"descr\":\"%s\"}", tmpProp->propName, tmpProp->propDescr);
+  return propJSON;
+}
+
+char* propertyListToJSON(const List* propList) {
+  char* propListString;
+  if (propList == NULL) {
+    propListString = malloc(sizeof(char) * 3);
+    strcpy(propListString, "[]");
+  } else if (getLength((List*)propList) == 0) {
+    propListString = malloc(sizeof(char) * 3);
+    strcpy(propListString, "[]");
+  } else {
+    int totalLen = 3;
+    propListString = malloc(sizeof(char) * totalLen);
+    strcpy(propListString, "[");
+    ListIterator iter = createIterator((List*)propList);
+    void* tmpObj;
+    Property* tmpProp;
+    while((tmpObj = nextElement(&iter)) != NULL) {
+      tmpProp = (Property*)tmpObj;
+      char* evtString = propertyToJSON(tmpProp);
+      totalLen+=(strlen(evtString) + 1);
+      propListString = realloc(propListString, sizeof(char) * totalLen);
+      if (strcmp(propListString, "[") != 0) {
+        strcat(propListString, ",");
+      }
+      strcat(propListString, evtString);
+      free(evtString);
+    }
+    strcat(propListString, "]");
+  }
+  return propListString;
+}
+
+char* alarmToJSON (const Alarm* alm) {
+  Alarm* tmpAlm = (Alarm*) alm;
+  char* propList = propertyListToJSON(tmpAlm->properties);
+  int len = strlen(tmpAlm->action) + strlen(tmpAlm->trigger) +strlen(propList) + 45;
+  char* almJSON = malloc(sizeof(char) * len);
+
+  snprintf(almJSON, len, "{\"action\":\"%s\",\"trigger\":\"%s\",\"properties\":%s}", tmpAlm->action, tmpAlm->trigger, propList);
+  free(propList);
+  return almJSON;
+}
+
+char* alarmListToJSON(const List* alarmList) {
+  char* alarmListString;
+  if (alarmList == NULL) {
+    alarmListString = malloc(sizeof(char) * 3);
+    strcpy(alarmListString, "[]");
+  } else if (getLength((List*)alarmList) == 0) {
+    alarmListString = malloc(sizeof(char) * 3);
+    strcpy(alarmListString, "[]");
+  } else {
+    int totalLen = 3;
+    alarmListString = malloc(sizeof(char) * totalLen);
+    strcpy(alarmListString, "[");
+    ListIterator iter = createIterator((List*)alarmList);
+    void* tmpObj;
+    Alarm* tmpAlarm;
+    while((tmpObj = nextElement(&iter)) != NULL) {
+      tmpAlarm = (Alarm*)tmpObj;
+      char* evtString = alarmToJSON(tmpAlarm);
+      totalLen+=(strlen(evtString) + 1);
+      alarmListString = realloc(alarmListString, sizeof(char) * totalLen);
+      if (strcmp(alarmListString, "[") != 0) {
+        strcat(alarmListString, ",");
+      }
+      strcat(alarmListString, evtString);
+      free(evtString);
+    }
+    strcat(alarmListString, "]");
+  }
+  return alarmListString;
+}
