@@ -503,6 +503,38 @@ char* newCalendarFile(char* filename, char* calJSON, char* evtJSON, char* create
   return finalJSON;
 }
 
+char* getAlarmListOfEvent(char* filename, int eventNumber) {
+  Calendar* cal;
+  createCalendar(filename, &cal);
+
+  ListIterator iter = createIterator((List*)cal->events);
+  void* tmpObj;
+  Event* tmpEvent;
+  for (int i = 0; i< eventNumber; i++) {
+    tmpObj = nextElement(&iter);
+  }
+  tmpEvent = (Event*)tmpObj;
+  char* almJSON = alarmListToJSON(tmpEvent->alarms);
+  deleteCalendar(cal);
+  return almJSON;
+}
+
+char* getPropertyListOfEvent(char* filename, int eventNumber) {
+  Calendar* cal;
+  createCalendar(filename, &cal);
+
+  ListIterator iter = createIterator((List*)cal->events);
+  void* tmpObj;
+  Event* tmpEvent;
+  for (int i = 0; i< eventNumber; i++) {
+    tmpObj = nextElement(&iter);
+  }
+  tmpEvent = (Event*)tmpObj;
+  char* propJSON = propertyListToJSON(tmpEvent->properties);
+  deleteCalendar(cal);
+  return propJSON;
+}
+
 char* propertyToJSON(const Property* prop) {
   Property* tmpProp = (Property*) prop;
   int len = strlen(tmpProp->propName) + strlen(tmpProp->propDescr) + 45;

@@ -43,7 +43,8 @@ char* parseCalReturnJSON(char* file);
 char* parseCalReturnEvents(char* file);
 char* addEventToFile(char* filename, char* evtJSON, char* createDT, char* startDT, char* summary);
 char* newCalendarFile(char* filename, char* calJSON, char* evtJSON, char* createDT, char* startDT, char* summary);
-
+char* getAlarmListOfEvent(char* filename, int eventNumber);
+char* getPropertyListOfEvent(char* filename, int eventNumber);
 
 char* propertyToJSON(const Property* prop);
 char* propertyListToJSON(const List* propList);

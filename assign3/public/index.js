@@ -9,7 +9,7 @@ $(document).ready(function() {
 
     $('#selectFile').on("change", function(event) {
         $.ajax({
-            trpe: 'get',
+            type: 'get',
             dataType: 'json',
             url: '/getEventList',
             data: {
@@ -24,15 +24,52 @@ $(document).ready(function() {
                     if (data[i].startDT.UTC) {
                         timeStr += " (UTC)";
                     }
-                    var htmlRow = `<tr><td>${i+1}</td><td>${datStr}</td><td>${timeStr}</td><td>${data[i].summary}</td><td>${data[i].numProps}</td><td>${data[i].numAlarms}</td><td><a id="alm${i}" nohref style="cursor:pointer;color:blue;text-decoration:underline">Show Alarms</a><p><a id="prop${i}" nohref style="cursor:pointer;color:blue;text-decoration:underline">Show Props</a></td></tr>`;
-                    $(`#alm${i}`).click(function(e) {
-                        e.preventDefault();
-                    });
-                    $(`#prop${i}`).click(function(e) {
-                        e.preventDefault();
-                    });
-                    $('#calendarview tr:last').after(htmlRow);
+                    var htmlRow = `<tr><td>${i+1}</td><td>${datStr}</td><td>${timeStr}</td><td>${data[i].summary}</td><td>${data[i].numProps}</td><td>${data[i].numAlarms}</td><td><a name="${i+1}" id="alm${i}" nohref style="cursor:pointer;color:blue;text-decoration:underline">Show Alarms</a><p><a name="${i+1}" id="prop${i}" nohref style="cursor:pointer;color:blue;text-decoration:underline">Show Props</a></td></tr>`;
+                    $('#calendarview tr:last').after(htmlRow);                    
                 }
+                for (j = 0; j < data.length; j++) {
+                    $(`#alm${j}`).on("click", function(e) {
+                        e.preventDefault();
+                        const evtNo = e.currentTarget.name;
+                        $.ajax({
+                            type: 'get',
+                            dataType: 'json',
+                            url: '/getAlarmJSON',
+                            data: {
+                                filename: $('#selectFile').val(),
+                                evtNumber: evtNo
+                            },
+                            success: function (data) {
+                                console.log(data);
+                            },
+                            fail: function (error) {
+                                // Non-200 return, do something with error
+                                console.log(error);
+                            }
+                        });
+                    });
+                    $(`#prop${j}`).on("click", function(e) {
+                        e.preventDefault();
+                        const evtNo = e.currentTarget.name;
+                        $.ajax({
+                            type: 'get',
+                            dataType: 'json',
+                            url: '/getOptionalProps',
+                            data: {
+                                filename: $('#selectFile').val(),
+                                evtNumber: evtNo
+                            },
+                            success: function (data) {
+                                console.log(data);
+                            },
+                            fail: function (error) {
+                                // Non-200 return, do something with error
+                                console.log(error);
+                            }
+                        });
+                    });
+                }
+
             },
             fail: function (error) {
                 // Non-200 return, do something with error

@@ -13,7 +13,9 @@ const libcal = ffi.Library('./libcal', {
   'parseCalReturnJSON' : ['string', ['string'] ],
   'parseCalReturnEvents' : ['string', ['string'] ],
   'addEventToFile' : ['string', ['string','string','string','string','string']],
-  'newCalendarFile' : ['string', ['string','string','string','string','string','string']]
+  'newCalendarFile' : ['string', ['string','string','string','string','string','string']],
+  'getAlarmListOfEvent' : ['string', ['string', 'int']],
+  'getPropertyListOfEvent' : ['string', ['string', 'int']]
 });
 
 app.use(fileUpload());
@@ -124,6 +126,22 @@ app.get('/addEventToFile', function (req, res) {
   const errCode = libcal.addEventToFile(fileStr, evtStr, createDTStr, startDTStr, summary);
   console.log(errCode);
   res.send(JSON.parse(errCode));
+});
+
+app.get('/getAlarmJSON', function (req, res) {
+  const fileStr = path.join(__dirname+'/uploads/' + req.query.filename);
+  const eventNum = parseInt(req.query.evtNumber, 10);
+  const almStr = libcal.getAlarmListOfEvent(fileStr, eventNum);
+  console.log(almStr);
+  res.send(JSON.parse(almStr));
+});
+
+app.get('/getOptionalProps', function (req, res) {
+  const fileStr = path.join(__dirname+'/uploads/' + req.query.filename);
+  const eventNum = parseInt(req.query.evtNumber, 10);
+  const propStr = libcal.getPropertyListOfEvent(fileStr, eventNum);
+  console.log(propStr);
+  res.send(JSON.parse(propStr));
 });
 
 app.listen(portNum);
