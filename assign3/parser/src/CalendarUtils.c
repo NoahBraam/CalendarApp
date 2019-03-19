@@ -412,9 +412,47 @@ char* parseCalReturnEvents(char* file) {
 
   int len = strlen(errString) + 30;
   snprintf(finalJSON, len, "{\"err\": \"%s\", \"num\": %d }", errString, 1);
+  free(errString);
   return finalJSON;
 }
 
 char* addEventToFile(char* filename, char* evtJSON, char* createDT, char* startDT, char* summary) {
-  
+  Calendar* cal;
+  ICalErrorCode err = createCalendar(filename, &cal);
+
+  Event* newEvt = JSONtoEvent(evtJSON);
+  DateTime start, create;
+  char* tok = strtok(startDT, "T");
+  strcpy(start.date, tok);
+  tok = strtok(NULL, "Z");
+  strcpy(start.time, tok);
+
+  tok = strtok(createDT, "T");
+  strcpy(create.date, tok);
+  tok = strtok(NULL, "Z");
+  strcpy(create.time, tok);
+
+  newEvt->creationDateTime = create;
+  newEvt->startDateTime = start;
+
+  if (strcmp(summary, "") != 0) {
+    Property* property = malloc(sizeof(Property));
+    strcpy(property->propName, "SUMMARY");
+    strcpy(property->propDescr, summary);
+    insertBack(newEvt->properties, property);
+  }
+  addEvent(cal, newEvt);
+  err = validateCalendar(cal);
+  if (err == OK) {
+    err = writeCalendar(filename, cal);
+    deleteCalendar(cal);
+  }
+
+  char* errString = printError(err);
+  char* finalJSON = malloc(sizeof(char) * 30 + strlen(errString));
+
+  int len = strlen(errString) + 30;
+  snprintf(finalJSON, len, "{\"err\": \"%s\", \"num\": %d }", errString, 1);
+  free(errString);
+  return finalJSON;
 }
