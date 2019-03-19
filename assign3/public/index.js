@@ -24,7 +24,7 @@ $(document).ready(function() {
                     if (data[i].startDT.UTC) {
                         timeStr += " (UTC)";
                     }
-                    var htmlRow = `<tr><td>${i+1}</td><td>${datStr}</td><td>${timeStr}</td><td>${data[i].summary}</td><td>${data[i].numProps}</td><td>${data[i].numAlarms}</td><td><a id="alm${i}" href="showAlm">Show Alarms</a><p><a id="prop${i}" href="showProp">Show Props</a></td></tr>`;
+                    var htmlRow = `<tr><td>${i+1}</td><td>${datStr}</td><td>${timeStr}</td><td>${data[i].summary}</td><td>${data[i].numProps}</td><td>${data[i].numAlarms}</td><td><a id="alm${i}" nohref style="cursor:pointer;color:blue;text-decoration:underline">Show Alarms</a><p><a id="prop${i}" nohref style="cursor:pointer;color:blue;text-decoration:underline">Show Props</a></td></tr>`;
                     $(`#alm${i}`).click(function(e) {
                         e.preventDefault();
                     });
