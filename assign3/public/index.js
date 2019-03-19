@@ -108,11 +108,11 @@ $(document).ready(function() {
                     prodID: $("#prodid").val()
                 },
                 evt: {
-                    uid: $("#uid").val(),
-                    dtStart: $("#dtstart").val(),
-                    creationDT: $("#creationdt").val(),
-                    summary: $("#summary").val()
-                }
+                    UID: $("#uid").val()
+                },
+                dtStart: $("#dtstart").val(),
+                creationDT: $("#creationdt").val(),
+                summary: $("#summary").val()
             }
             $.ajax({
                 type: 'get',
@@ -130,11 +130,11 @@ $(document).ready(function() {
             var json = {
                 filename: $("#createFileSelect").val(),
                 evt: {
-                    uid: $("#uid").val(),
-                    dtStart: $("#dtstart").val(),
-                    creationDT: $("#creationdt").val(),
-                    summary: $("#summary").val() 
-                }
+                    UID: $("#uid").val()
+                },
+                dtStart: $("#dtstart").val(),
+                creationDT: $("#creationdt").val(),
+                summary: $("#summary").val() 
             }
             $.ajax({
                 type: 'get',
@@ -142,7 +142,7 @@ $(document).ready(function() {
                 url: '/addEventToFile',
                 data: json,
                 success: function(data) {
-
+                    console.log(data);
                 },
                 fail: function(error) {
 

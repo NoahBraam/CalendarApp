@@ -11,7 +11,9 @@ const fileUpload = require('express-fileupload');
 
 const libcal = ffi.Library('./libcal', {
   'parseCalReturnJSON' : ['string', ['string'] ],
-  'parseCalReturnEvents' : ['string', ['string'] ]
+  'parseCalReturnEvents' : ['string', ['string'] ],
+  'addEventToFile' : ['string', ['string','string','string','string','string']],
+  'newCalendarFile' : ['string', ['string','string','string','string','string','string']]
 });
 
 app.use(fileUpload());
@@ -107,11 +109,28 @@ app.get('/getEventList', function (req, res) {
 });
 
 app.get('/createNewCal', function (req, res) {
-  console.log(req.query);
+  const fileStr = path.join(__dirname+'/uploads/' + req.query.filename);
+  const calStr = JSON.stringify(req.query.cal);
+  const evtStr = JSON.stringify(req.query.evt);
+  const createDTStr = req.query.creationDT;
+  const startDTStr = req.query.dtStart;
+  const summary = req.query.summary;
+
+  const errCode = libcal.newCalendarFile(fileStr, calStr, evtStr, createDTStr, startDTStr, summary);
+  console.log(errCode);
+  res.send(JSON.parse(errCode));
 });
 
 app.get('/addEventToFile', function (req, res) {
-  console.log(req.query);
+  const fileStr = path.join(__dirname+'/uploads/' + req.query.filename);
+  const evtStr = JSON.stringify(req.query.evt);
+  const createDTStr = req.query.creationDT;
+  const startDTStr = req.query.dtStart;
+  const summary = req.query.summary;
+
+  const errCode = libcal.addEventToFile(fileStr, evtStr, createDTStr, startDTStr, summary);
+  console.log(errCode);
+  res.send(JSON.parse(errCode));
 });
 
 app.listen(portNum);
