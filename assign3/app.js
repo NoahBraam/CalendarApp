@@ -76,14 +76,6 @@ app.get('/uploads/:name', function(req , res){
 });
 
 //******************** Your code goes here ******************** 
-
-//Sample endpoint
-app.get('/someendpoint', function(req , res){
-  res.send({
-    foo: "bar"
-  });
-});
-
 app.get('/filenames', function(req, res) {
   var fileNames = [];
   fs.readdirSync('./uploads/').forEach(file => {
@@ -110,7 +102,8 @@ app.get('/getEventList', function (req, res) {
 
 app.get('/createNewCal', function (req, res) {
   const fileStr = path.join(__dirname+'/uploads/' + req.query.filename);
-  const calStr = JSON.stringify(req.query.cal);
+  const calStr = `{"version":${req.query.cal.version},"prodID":"${req.query.cal.prodID}"}`
+  console.log(calStr);
   const evtStr = JSON.stringify(req.query.evt);
   const createDTStr = req.query.creationDT;
   const startDTStr = req.query.dtStart;
