@@ -414,3 +414,7 @@ char* parseCalReturnEvents(char* file) {
   snprintf(finalJSON, len, "{\"err\": \"%s\", \"num\": %d }", errString, 1);
   return finalJSON;
 }
+
+char* addEventToFile(char* filename, char* evtJSON, char* createDT, char* startDT, char* summary) {
+  
+}

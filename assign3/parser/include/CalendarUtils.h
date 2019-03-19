@@ -41,5 +41,6 @@ bool endsWith(char* str, char* search);
 
 char* parseCalReturnJSON(char* file);
 char* parseCalReturnEvents(char* file);
+char* addEventToFile(char* filename, char* evtJSON, char* createDT, char* startDT, char* summary)
 
 #endif

@@ -98,8 +98,65 @@ $(document).ready(function() {
     });
 
     $("#calEvtForm").submit(function(e){
-        console.log(e);
         e.preventDefault();
         $.ajax({});
+        if(e.originalEvent.explicitOriginalTarget.id === "createCalBtn") {
+            var json = {
+                filename: $("#filename").val(),
+                cal: {
+                    version: $("#version").val(),
+                    prodID: $("#prodid").val()
+                },
+                evt: {
+                    uid: $("#uid").val(),
+                    dtStart: $("#dtstart").val(),
+                    creationDT: $("#creationdt").val(),
+                    summary: $("#summary").val()
+                }
+            }
+            $.ajax({
+                type: 'get',
+                dataType: 'json',
+                url: '/createNewCal',
+                data: json,
+                success: function(data) {
+
+                },
+                fail: function(error) {
+
+                }
+            });
+        } else {
+            var json = {
+                filename: $("#createFileSelect").val(),
+                evt: {
+                    uid: $("#uid").val(),
+                    dtStart: $("#dtstart").val(),
+                    creationDT: $("#creationdt").val(),
+                    summary: $("#summary").val() 
+                }
+            }
+            $.ajax({
+                type: 'get',
+                dataType: 'json',
+                url: '/addEventToFile',
+                data: json,
+                success: function(data) {
+
+                },
+                fail: function(error) {
+
+                }
+            });
+            $("#filename").attr("required", true);
+            $("#filename").removeAttr("disabled")
+            $("#version").attr("required", true);
+            $("#version").removeAttr("disabled")
+            $("#prodid").attr("required", true);
+            $("#prodid").removeAttr("disabled");
+            $("#createEvtBtn").attr("disabled", "disabled");
+            $("#createCalBtn").removeAttr("disabled");
+        }
+        $("#calEvtForm").trigger("reset");
     });
 });

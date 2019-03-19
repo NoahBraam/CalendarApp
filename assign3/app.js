@@ -106,5 +106,13 @@ app.get('/getEventList', function (req, res) {
   res.send(json);
 });
 
+app.get('/createNewCal', function (req, res) {
+  console.log(req.query);
+});
+
+app.get('/addEventToFile', function (req, res) {
+  console.log(req.query);
+});
+
 app.listen(portNum);
 console.log('Running app at localhost: ' + portNum);
