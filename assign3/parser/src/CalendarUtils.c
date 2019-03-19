@@ -439,7 +439,7 @@ char* addEventToFile(char* filename, char* evtJSON, char* createDT, char* startD
   newEvt->startDateTime = start;
 
   if (strcmp(summary, "") != 0) {
-    Property* property = malloc(sizeof(Property));
+    Property* property = malloc(sizeof(Property) + strlen(summary) + 1);
     strcpy(property->propName, "SUMMARY");
     strcpy(property->propDescr, summary);
     insertBack(newEvt->properties, property);
@@ -448,7 +448,7 @@ char* addEventToFile(char* filename, char* evtJSON, char* createDT, char* startD
   err = validateCalendar(cal);
   if (err == OK) {
     err = writeCalendar(filename, cal);
-    //deleteCalendar(cal);
+    deleteCalendar(cal);
   }
 
   char* errString = printError(err);
@@ -482,7 +482,7 @@ char* newCalendarFile(char* filename, char* calJSON, char* evtJSON, char* create
   newEvt->startDateTime = start;
 
   if (strcmp(summary, "") != 0) {
-    Property* property = malloc(sizeof(Property));
+    Property* property = malloc(sizeof(Property) + strlen(summary) + 1);
     strcpy(property->propName, "SUMMARY");
     strcpy(property->propDescr, summary);
     insertBack(newEvt->properties, property);
@@ -491,7 +491,7 @@ char* newCalendarFile(char* filename, char* calJSON, char* evtJSON, char* create
   ICalErrorCode err = validateCalendar(cal);
   if (err == OK) {
     err = writeCalendar(filename, cal);
-    //deleteCalendar(cal);
+    deleteCalendar(cal);
   }
 
   char* errString = printError(err);

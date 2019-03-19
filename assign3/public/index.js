@@ -163,7 +163,8 @@ $(document).ready(function() {
                 url: '/createNewCal',
                 data: json,
                 success: function(data) {
-
+                    // Refresh view components
+                    $("#statuspanel").append(`Created new file: ${json.filename}<br>`)
                 },
                 fail: function(error) {
 
@@ -185,7 +186,8 @@ $(document).ready(function() {
                 url: '/addEventToFile',
                 data: json,
                 success: function(data) {
-                    console.log(data);
+                    // Refresh view components
+                    $("#statuspanel").append(`Created new event in ${json.filename}<br>`)
                 },
                 fail: function(error) {
 
