@@ -93,7 +93,11 @@ app.get('/parsefileReturnCal', function(req, res) {
   var calJSON = libcal.parseCalReturnJSON(path.join(__dirname+'/uploads/' + req.query.filename));
   var json = JSON.parse(calJSON);
   json.filename = req.query.filename;
-  res.send(json);
+  if (json.prodID === undefined) {
+    res.status(418).send(`Could not create calendar from ${req.query.filename} because of ${json.err}`);
+  } else {
+    res.send(json);
+  }
 });
 
 app.get('/getEventList', function (req, res) {
@@ -112,7 +116,12 @@ app.get('/createNewCal', function (req, res) {
   const summary = req.query.summary;
 
   const errCode = libcal.newCalendarFile(fileStr, calStr, evtStr, createDTStr, startDTStr, summary);
-  res.send(JSON.parse(errCode));
+  const err = JSON.parse(errCode);
+  if (err.err !== "OK") {
+    res.status(418).send(`Could not create calendar from ${req.query.filename} because of ${json.err}`);
+  } else {
+    res.send(err);
+  }
 });
 
 app.get('/addEventToFile', function (req, res) {
@@ -123,7 +132,12 @@ app.get('/addEventToFile', function (req, res) {
   const summary = req.query.summary;
 
   const errCode = libcal.addEventToFile(fileStr, evtStr, createDTStr, startDTStr, summary);
-  res.send(JSON.parse(errCode));
+  const err = JSON.parse(errCode);
+  if (err.err !== "OK") {
+    res.status(418).send(`Could not add event to calendar in ${req.query.filename} because of ${json.err}`);
+  } else {
+    res.send(err);
+  }
 });
 
 app.get('/getAlarmJSON', function (req, res) {

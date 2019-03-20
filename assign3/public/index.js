@@ -3,8 +3,6 @@ $(document).ready(function() {
     $('#clear').on("click", function(e){
         $('#statuspanel').val("");
         e.preventDefault();
-        //Pass data to the Ajax call, so it gets passed to the 
-        $.ajax({});
     });
 
     $('#selectFile').on("change", function(event) {
@@ -41,7 +39,8 @@ $(document).ready(function() {
         $.ajax({});
         if(e.originalEvent.explicitOriginalTarget.id === "createCalBtn") {
             if (!$("#filename").val().endsWith(".ics") ){
-                $("#statuspanel").append(`Incorrect file extension!\r\n`);
+                var tmpVal = $("#statuspanel").val();
+                $("#statuspanel").val(tmpVal + `Incorrect file extension!\r\n`);
                 scroll();
                 $("#filename").css('border-color', 'red');
                 return;
@@ -66,13 +65,15 @@ $(document).ready(function() {
                 data: json,
                 success: function(data) {
                     // Refresh view components
-                    $("#statuspanel").append(`Created new file: ${json.filename}\r\n`);
+                    var tmpVal = $("#statuspanel").val();
+                    $("#statuspanel").val(tmpVal + `Created new file: ${json.filename}\r\n`);
                     scroll();
                     updateFileList();
                     updateCalView();
                 },
-                fail: function(error) {
-
+                error: function(error) {
+                    var tmpVal = $("#statuspanel").val();
+                    $("#statuspanel").val(tmpVal + error.responseText + "\r\n");
                 }
             });
         } else {
@@ -92,13 +93,15 @@ $(document).ready(function() {
                 data: json,
                 success: function(data) {
                     // Refresh view components
-                    $("#statuspanel").append(`Created new event in ${json.filename}\r\n`);
+                    var tmpVal = $("#statuspanel").val();
+                    $("#statuspanel").val(tmpVal + `Created new event in ${json.filename}\r\n`);
                     scroll();
                     updateFileList();
                     updateCalView();
                 },
-                fail: function(error) {
-
+                error: function(error) {
+                    var tmpVal = $("#statuspanel").val();
+                    $("#statuspanel").val(tmpVal + error.responseText + "\r\n");
                 }
             });
             $("#filename").attr("required", true);
@@ -109,18 +112,19 @@ $(document).ready(function() {
             $("#prodid").removeAttr("disabled");
             $("#createEvtBtn").attr("disabled", "disabled");
             $("#createCalBtn").removeAttr("disabled");
-            $("#filename").css('border-color', '');
+            $("#filename").css('border-color', 'transparent');
         }
         $("#calEvtForm").trigger("reset");
     });
-    
-    function scroll() {
-        var stat = $('#statuspanel');
-        if(stat.length)
-            stat.scrollTop(stat[0].scrollHeight - stat.height());
-    }
 
 });
+
+function scroll() {
+    var stat = $('#statuspanel');
+    if(stat.length) {
+        stat.scrollTop(stat[0].scrollHeight - stat.height());
+    }
+}
 
 function updateFileList() {
     $.ajax({
@@ -155,9 +159,9 @@ function updateFileList() {
                                 var htmlRow = `<tr><td><a href = "/uploads/${resp.filename}">${resp.filename}</a></td><td>${resp.version}</td><td>${resp.prodID}</td><td>${resp.numEvents}</td><td>${resp.numProps}</td></tr>`;
                                 $('#filelog tr:last').after(htmlRow);
                             },
-                            fail: function(error) {
-                                // Non-200 return, do something with error
-                                console.log(error);
+                            error: function(error) {
+                                var tmpVal = $("#statuspanel").val();
+                                $("#statuspanel").val(tmpVal + error.responseText + "\r\n");
                             }
                         });
                     }
@@ -215,7 +219,8 @@ function updateCalView() {
                                         }
                                     }
                                 }
-                                $("#statuspanel").append(textToAppend + "\r\n");
+                                var tmpVal = $("#statuspanel").val();
+                                $("#statuspanel").val(tmpVal + textToAppend + "\r\n");
                                 scroll();
                             }
                         },
@@ -242,7 +247,8 @@ function updateCalView() {
                                 for (i = 0; i<dt.length; i++) {
                                     textToAdd+=`\r\nProperty Name: ${dt[i].name}     Property Description: ${dt[i].descr}`
                                 }
-                                $("#statuspanel").append(textToAdd + "\r\n");
+                                var tmpVal = $("#statuspanel").val();
+                                $("#statuspanel").val(tmpVal + textToAdd + "\r\n");
                                 scroll();
                             }
                         },
