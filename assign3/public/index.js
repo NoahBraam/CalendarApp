@@ -39,8 +39,21 @@ $(document).ready(function() {
                                 filename: $('#selectFile').val(),
                                 evtNumber: evtNo
                             },
-                            success: function (data) {
-                                console.log(data);
+                            success: function (dt) {
+                                if (dt !== []) {
+                                    var textToAppend = "";
+                                    for (i = 0; i<dt.length; i++) {
+                                        textToAppend += `\r\nAlarm ${i+1}) Trigger: ${dt[i].trigger}    Action: ${dt[i].action}\r\n`;
+                                        if (dt[i].properties !== []) {
+                                            textToAppend+=`Additional Properties: `;
+                                            for (j = 0; j<dt[i].properties.length; j++) {
+                                                textToAppend+=`\r\nProperty Name: ${dt[i].properties[j].name}     Property Description: ${dt[i].properties[j].descr}`
+                                            }
+                                        }
+                                    }
+                                    $("#statuspanel").append(textToAppend + "\r\n");
+                                    scroll();
+                                }
                             },
                             fail: function (error) {
                                 // Non-200 return, do something with error
@@ -59,8 +72,15 @@ $(document).ready(function() {
                                 filename: $('#selectFile').val(),
                                 evtNumber: evtNo
                             },
-                            success: function (data) {
-                                console.log(data);
+                            success: function (dt) {
+                                if (dt !== []) {
+                                    var textToAdd =`\r\nAdditional Properties: `;
+                                    for (i = 0; i<dt.length; i++) {
+                                        textToAdd+=`\r\nProperty Name: ${dt[i].name}     Property Description: ${dt[i].descr}`
+                                    }
+                                    $("#statuspanel").append(textToAdd + "\r\n");
+                                    scroll();
+                                }
                             },
                             fail: function (error) {
                                 // Non-200 return, do something with error
@@ -144,6 +164,12 @@ $(document).ready(function() {
         e.preventDefault();
         $.ajax({});
         if(e.originalEvent.explicitOriginalTarget.id === "createCalBtn") {
+            if (!$("#filename").val().endsWith(".ics") ){
+                $("#statuspanel").append(`Incorrect file extension!\r\n`);
+                scroll();
+                $("#filename").css('border-color', 'red');
+                return;
+            } 
             var json = {
                 filename: $("#filename").val(),
                 cal: {
@@ -164,7 +190,8 @@ $(document).ready(function() {
                 data: json,
                 success: function(data) {
                     // Refresh view components
-                    $("#statuspanel").append(`Created new file: ${json.filename}<br>`)
+                    $("#statuspanel").append(`Created new file: ${json.filename}\r\n`);
+                    scroll();
                 },
                 fail: function(error) {
 
@@ -187,7 +214,8 @@ $(document).ready(function() {
                 data: json,
                 success: function(data) {
                     // Refresh view components
-                    $("#statuspanel").append(`Created new event in ${json.filename}<br>`)
+                    $("#statuspanel").append(`Created new event in ${json.filename}\r\n`);
+                    scroll();
                 },
                 fail: function(error) {
 
@@ -201,7 +229,14 @@ $(document).ready(function() {
             $("#prodid").removeAttr("disabled");
             $("#createEvtBtn").attr("disabled", "disabled");
             $("#createCalBtn").removeAttr("disabled");
+            $("#filename").css('border-color', '');
         }
         $("#calEvtForm").trigger("reset");
     });
+    
+    function scroll() {
+        var stat = $('#statuspanel');
+        if(stat.length)
+            stat.scrollTop(stat[0].scrollHeight - stat.height());
+    }
 });

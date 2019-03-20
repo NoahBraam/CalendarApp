@@ -28,6 +28,7 @@ tr:nth-child(even) {background: #CCC}
 tr:nth-child(odd) {background: #FFF}
 #statuspanel {
     overflow: scroll;
+    white-space: pre-wrap;
 }
 @media(max-width: 900px) {
     html {

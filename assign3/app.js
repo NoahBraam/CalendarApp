@@ -112,7 +112,6 @@ app.get('/createNewCal', function (req, res) {
   const summary = req.query.summary;
 
   const errCode = libcal.newCalendarFile(fileStr, calStr, evtStr, createDTStr, startDTStr, summary);
-  console.log(errCode);
   res.send(JSON.parse(errCode));
 });
 
@@ -124,7 +123,6 @@ app.get('/addEventToFile', function (req, res) {
   const summary = req.query.summary;
 
   const errCode = libcal.addEventToFile(fileStr, evtStr, createDTStr, startDTStr, summary);
-  console.log(errCode);
   res.send(JSON.parse(errCode));
 });
 
@@ -132,7 +130,6 @@ app.get('/getAlarmJSON', function (req, res) {
   const fileStr = path.join(__dirname+'/uploads/' + req.query.filename);
   const eventNum = parseInt(req.query.evtNumber, 10);
   const almStr = libcal.getAlarmListOfEvent(fileStr, eventNum);
-  console.log(almStr);
   res.send(JSON.parse(almStr));
 });
 
@@ -140,7 +137,6 @@ app.get('/getOptionalProps', function (req, res) {
   const fileStr = path.join(__dirname+'/uploads/' + req.query.filename);
   const eventNum = parseInt(req.query.evtNumber, 10);
   const propStr = libcal.getPropertyListOfEvent(fileStr, eventNum);
-  console.log(propStr);
   res.send(JSON.parse(propStr));
 });
 
