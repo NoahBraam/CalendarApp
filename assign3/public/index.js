@@ -70,6 +70,7 @@ $(document).ready(function() {
                     scroll();
                     updateFileList();
                     updateCalView();
+                    $("#filename").css('border-color', 'transparent');
                 },
                 error: function(error) {
                     var tmpVal = $("#statuspanel").val();
