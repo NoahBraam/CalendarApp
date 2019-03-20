@@ -58,6 +58,20 @@ $(document).ready(function() {
                 creationDT: $("#creationdt").val(),
                 summary: $("#summary").val()
             }
+            if (!validateDT(json.dtStart)){
+                var tmpVal = $("#statuspanel").val();
+                $("#statuspanel").val(tmpVal + `Invalid Start DT!\r\n`);
+                scroll();
+                $("#dtstart").css('border-color', 'red');
+                return;
+            }
+            if(!validateDT(json.creationDT)) {
+                var tmpVal = $("#statuspanel").val();
+                $("#statuspanel").val(tmpVal + `Invalid Create DT!\r\n`);
+                scroll();
+                $("#creationdt").css('border-color', 'red');
+                return;
+            }
             $.ajax({
                 type: 'get',
                 dataType: 'json',
@@ -87,6 +101,20 @@ $(document).ready(function() {
                 creationDT: $("#creationdt").val(),
                 summary: $("#summary").val() 
             }
+            if (!validateDT(json.dtStart)){
+                var tmpVal = $("#statuspanel").val();
+                $("#statuspanel").val(tmpVal + `Invalid Start DT!\r\n`);
+                scroll();
+                $("#dtstart").css('border-color', 'red');
+                return;
+            }
+            if(!validateDT(json.creationDT)) {
+                var tmpVal = $("#statuspanel").val();
+                $("#statuspanel").val(tmpVal + `Invalid Create DT!\r\n`);
+                scroll();
+                $("#creationdt").css('border-color', 'red');
+                return;
+            }
             $.ajax({
                 type: 'get',
                 dataType: 'json',
@@ -114,6 +142,8 @@ $(document).ready(function() {
             $("#createEvtBtn").attr("disabled", "disabled");
             $("#createCalBtn").removeAttr("disabled");
             $("#filename").css('border-color', 'transparent');
+            $("#creationdt").css('border-color', '');
+            $("#dtstart").css('border-color', '');
         }
         $("#calEvtForm").trigger("reset");
     });
@@ -127,6 +157,18 @@ function scroll() {
     }
 }
 
+function validateDT(dtVal) {
+    var dtMonth = parseInt(dtVal.substring(4,6));
+    var dtDate = parseInt(dtVal.substring(6, 8));
+    var dtHour = parseInt(dtVal.substring(9,11));
+    var dtMin = parseInt(dtVal.substring(11,13));
+    var dtSec = parseInt(dtVal.substring(13));
+    if (dtMonth > 12 || dtMonth < 1 || dtDate > 31 || dtHour > 23 || dtMin > 59 || dtSec > 59) {
+        return false;
+    }
+    return true;
+}
+
 function updateFileList() {
     $.ajax({
         type: 'get',
@@ -137,13 +179,6 @@ function updateFileList() {
                 $('#filelog tr:last').after(`<tr><td>No Files on Server</td><td></td><td></td><td></td><td></td></tr>`);
             } else {
                 $("#filelog").find("tr:gt(0)").remove();
-                var select = document.getElementById("selectFile");
-                var select2 = document.getElementById("createFileSelect");
-                var length = select.options.length;
-                // for (i = 1; i < length; i++) {
-                //     select.options[i].remove();
-                //     select2.options[i].remove();
-                // }
                 $('#selectFile').children('option:not(:first)').remove();
                 $('#createFileSelect').children('option:not(:first)').remove();
                 for (i = 0; i<data.numFiles; i++) {
@@ -192,10 +227,10 @@ function updateCalView() {
             for (i = 0; i<data.length; i++) {
                 datStr = data[i].startDT.date;
                 timeStr = data[i].startDT.time;
-                if (data[i].startDT.UTC) {
+                if (data[i].startDT.isUTC) {
                     timeStr += " (UTC)";
                 }
-                var htmlRow = `<tr><td>${i+1}</td><td>${datStr}</td><td>${timeStr}</td><td>${data[i].summary}</td><td>${data[i].numProps}</td><td>${data[i].numAlarms}</td><td><a name="${i+1}" id="alm${i}" nohref style="cursor:pointer;color:blue;text-decoration:underline">Show Alarms</a><p><a name="${i+1}" id="prop${i}" nohref style="cursor:pointer;color:blue;text-decoration:underline">Show Props</a></td></tr>`;
+                var htmlRow = `<tr><td>${i+1}</td><td>${datStr.substring(0,4)}/${datStr.substring(4,6)}/${datStr.substring(6)}</td><td>${timeStr.substring(0,2)}:${timeStr.substring(2,4)}:${timeStr.substring(4)}</td><td>${data[i].summary}</td><td>${data[i].numProps}</td><td>${data[i].numAlarms}</td><td><a name="${i+1}" id="alm${i}" nohref style="cursor:pointer;color:blue;text-decoration:underline">Show Alarms</a><p><a name="${i+1}" id="prop${i}" nohref style="cursor:pointer;color:blue;text-decoration:underline">Show Props</a></td></tr>`;
                 $('#calendarview tr:last').after(htmlRow);                    
             }
             for (j = 0; j < data.length; j++) {
