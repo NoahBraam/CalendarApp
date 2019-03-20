@@ -24,6 +24,11 @@ input[type=submit], button {
     cursor: pointer;
     cursor: hand;
 }
+table{
+    overflow-y:scroll;
+    height:250px;
+    display:block;
+ }
 tr:nth-child(even) {background: #CCC}
 tr:nth-child(odd) {background: #FFF}
 #statuspanel {

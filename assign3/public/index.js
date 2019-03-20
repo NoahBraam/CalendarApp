@@ -40,11 +40,11 @@ $(document).ready(function() {
                                 evtNumber: evtNo
                             },
                             success: function (dt) {
-                                if (dt !== []) {
+                                if (dt.length !== 0) {
                                     var textToAppend = "";
                                     for (i = 0; i<dt.length; i++) {
                                         textToAppend += `\r\nAlarm ${i+1}) Trigger: ${dt[i].trigger}    Action: ${dt[i].action}\r\n`;
-                                        if (dt[i].properties !== []) {
+                                        if (dt[i].properties.length !== 0) {
                                             textToAppend+=`Additional Properties: `;
                                             for (j = 0; j<dt[i].properties.length; j++) {
                                                 textToAppend+=`\r\nProperty Name: ${dt[i].properties[j].name}     Property Description: ${dt[i].properties[j].descr}`
@@ -73,7 +73,7 @@ $(document).ready(function() {
                                 evtNumber: evtNo
                             },
                             success: function (dt) {
-                                if (dt !== []) {
+                                if (dt.length !== 0) {
                                     var textToAdd =`\r\nAdditional Properties: `;
                                     for (i = 0; i<dt.length; i++) {
                                         textToAdd+=`\r\nProperty Name: ${dt[i].name}     Property Description: ${dt[i].descr}`
