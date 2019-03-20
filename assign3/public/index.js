@@ -191,7 +191,6 @@ function updateFileList() {
                                 filename : data.files[i]
                             },
                             success: function(resp) {
-                                console.log(resp);
                                 $("#selectFile").append(new Option(resp.filename, ""+resp.filename+""));
                                 $("#createFileSelect").append(new Option(resp.filename, ""+resp.filename+""));
                                 var htmlRow = `<tr><td><a href = "/uploads/${resp.filename}">${resp.filename}</a></td><td>${resp.version}</td><td>${resp.prodID}</td><td>${resp.numEvents}</td><td>${resp.numProps}</td></tr>`;
@@ -222,7 +221,6 @@ function updateCalView() {
             filename: $('#selectFile').val()
         },
         success: function (data) {
-            console.log(data);
             $("#calendarview").find("tr:gt(0)").remove();
             for (i = 0; i<data.length; i++) {
                 datStr = data[i].startDT.date;

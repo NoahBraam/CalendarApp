@@ -109,7 +109,6 @@ app.get('/getEventList', function (req, res) {
 app.get('/createNewCal', function (req, res) {
   const fileStr = path.join(__dirname+'/uploads/' + req.query.filename);
   const calStr = `{"version":${req.query.cal.version},"prodID":"${req.query.cal.prodID}"}`
-  console.log(calStr);
   const evtStr = JSON.stringify(req.query.evt);
   const createDTStr = req.query.creationDT;
   const startDTStr = req.query.dtStart;
