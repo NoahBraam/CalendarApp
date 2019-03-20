@@ -134,16 +134,18 @@ function updateFileList() {
         url: '/filenames',
         success: function (data) {
             if (data.numFiles === 0) {
-                $('#filelog tr:last').after(`<tr><td>No Files on Server</td></tr>`);
+                $('#filelog tr:last').after(`<tr><td>No Files on Server</td><td></td><td></td><td></td><td></td></tr>`);
             } else {
                 $("#filelog").find("tr:gt(0)").remove();
                 var select = document.getElementById("selectFile");
                 var select2 = document.getElementById("createFileSelect");
                 var length = select.options.length;
-                for (i = 1; i < length; i++) {
-                    select.options[i] = null;
-                    select2.options[i] = null;
-                }
+                // for (i = 1; i < length; i++) {
+                //     select.options[i].remove();
+                //     select2.options[i].remove();
+                // }
+                $('#selectFile').children('option:not(:first)').remove();
+                $('#createFileSelect').children('option:not(:first)').remove();
                 for (i = 0; i<data.numFiles; i++) {
                     if (data.files[i].endsWith(".ics")) {
                         $.ajax({
