@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Calendar Viewer</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A calendar file management tool.">
+    <meta name="keywords" content="iCal">
+    <meta name="author" content="Noah Braam">
+    <!-- Load jquery, bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <!-- Custom CSS End -->
+</head>
+<body>
+    <hr>
+    <div id ="status">
+        <textarea readonly id="statuspanel" name="statuspanel" rows="10" cols="100" style="resize: none">
+        </textarea>
+        <p>
+        <input id="clear" type='submit' class="btn btn-secondary" value="Clear">
+    </div>
+    <hr>
+
+    <table id='filelog' style="width:80%">
+        <tr>
+            <th>File Name</th>
+            <th>Version</th>
+            <th>Product ID</th>
+            <th>No. of Events</th>
+            <th>No. of Properties</th>
+        </tr>
+    </table>
+    <form ref='uploadForm' 
+        id='uploadForm' 
+        action='/upload' 
+        method='post' 
+        encType="multipart/form-data">
+            <input id="file-input" type="file" name="uploadFile" accept=".ics" required/>
+            <input id="uploadcal" type='submit' class="btn btn-secondary" value="Upload File">
+    </form>
+    <hr>
+
+    <select id="selectFile" name="selectFile">
+        <option value="" disabled selected>Select file</option>
+    </select>
+
+    <table id='calendarview' style="width:80%">
+        <tr>
+            <th>Event No.</th>
+            <th>Start Date</th>
+            <th>Start Time</th>
+            <th>Summary</th>
+            <th>Props</th>
+            <th>Alarms</th>
+            <th>Actions</th>
+        </tr>
+        <tr>
+            <td>No File Selected</td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+    </table>
+    <hr>
+    <form id="calEvtForm">
+        <section>
+            <h3>Create Calendar</h3>
+            <p>
+                <label for="filename">
+                    <span>Filename: </span>
+                    <strong><abbr title="Required">*</abbr></strong>
+                </label>
+                <input type="text" id="filename" name="userfile" placeholder="*.ics" required>
+            </p>
+            <p>
+                <label for="version">
+                    <span>Version: </span>
+                    <strong><abbr title="Required">*</abbr></strong>
+                </label>
+                <input type="number" id="version" name="version_no" placeholder="2.0" required>
+                
+            </p>
+            <p>
+                <label for="prodid">
+                    <span>Product ID: </span>
+                    <strong><abbr title="Required">*</abbr></strong>
+                </label>
+                <input type="text" id="prodid" name="prodid" placeholder="SomeID" required>
+            </p>
+            <p>
+                <button type="submit" id="createCalBtn" class="btn btn-secondary">Create Calendar</button>
+            </p>
+        </section>
+        <section>
+            <h3>Create Event</h3>
+            <p>
+                <span>Choose File: </span>
+                <select id="createFileSelect">
+                    <option value="new">New Calendar</option>
+                </select>
+            </p>
+            <p>
+                <label for="uid">
+                    <span>UID: </span>
+                    <strong><abbr title="Required">*</abbr></strong>
+                </label>
+                <input type="text" id="uid" name="evtUID" placeholder="someUID" required>
+            </p>
+            <p>
+                <label for="dtstart">
+                    <span>Starting Date-Time: </span>
+                    <strong><abbr title="Required">*</abbr></strong>
+                    <span class="validity"></span>
+                </label>
+                <input type="datetime-local" id="dtstart" name="startDT" placeholder="yyyymmddThhmmss" pattern="[0-9]{8}T[0-9]{6}" required>
+                <label for="creationDT">
+                    <span>Creation Date-Time: </span>
+                    <strong><abbr title="Required">*</abbr></strong>
+                    <span class="validity"></span>
+                </label>
+                <input type="datetime-local" id="creationdt" name="createDT" placeholder="yyyymmddThhmmss" pattern="[0-9]{8}T[0-9]{6}" required>
+            </p>
+            <p>
+                <label for="summary">
+                    <span>Summary: </span>
+                </label>
+                <input type="text" id="summary" name="summary">
+            </p>
+            <p><button id="createEvtBtn" type="submit" class="btn btn-secondary" disabled="disabled">Create Event</button></p>
+        </section>
+    </form>
+    <!-- Leave me at the bottom of body -->
+    <script src="/index.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
