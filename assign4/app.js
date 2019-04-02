@@ -171,6 +171,22 @@ app.get('/createDBConnection', function (req, res) {
       const createTableFile = `CREATE TABLE FILE (cal_id INT AUTO_INCREMENT PRIMARY KEY, file_Name VARCHAR(60) NOT NULL, version INT NOT NULL, prod_id VARCHAR(256) NOT NULL)`;
       const createTableEvent = `CREATE TABLE EVENT(event_id INT AUTO_INCREMENT PRIMARY KEY, summary VARCHAR(1024), start_time DATETIME NOT NULL, location VARCHAR(60), organizer CARCHAR(256), cal_file INT NOT NULL, FOREIGN KEY(cal_file) REFERENCES FILE(cal_id) ON DELETE CASCADE)`;
       const createTableAlarm = "CREATE TABLE ALARM(alarm_id INT AUTO_INCREMENT PRIMARY KEY, action VARCHAR(256) NOT NULL, `trigger` VARCHAR(256) NOT NULL, event INT NOT NULL, FOREIGN KEY(event) REFERENCES EVENT(event_id) ON DELETE CASCADE)";
+
+      connection.query(createTableFile, function (err, rows, fields) {
+        if (err) {
+          console.log("Did not create FILE table");
+        }
+      });
+      connection.query(createTableEvent, function (err, rows, fields) {
+        if (err) {
+          console.log("Did not create EVENT table");
+        }
+      });
+      connection.query(createTableAlarm, function (err, rows, fields) {
+        if (err) {
+          console.log("Did not create ALARM table");
+        }
+      });
     }
   });
   res.send();
