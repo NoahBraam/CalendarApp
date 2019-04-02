@@ -3,6 +3,9 @@
 // C library API
 const ffi = require('ffi');
 
+// MySQL
+const mysql = require('mysql');
+var connection;
 // Express App (Routes)
 const express = require("express");
 const app     = express();
@@ -151,6 +154,26 @@ app.get('/getOptionalProps', function (req, res) {
   const eventNum = parseInt(req.query.evtNumber, 10);
   const propStr = libcal.getPropertyListOfEvent(fileStr, eventNum);
   res.send(JSON.parse(propStr));
+});
+
+app.get('/createDBConnection', function (req, res) {
+  connection = mysql.createConnection({
+    host: 'dursley.socs.uoguelph.ca',
+    user: req.query.user,
+    password: req.query.password,
+    database: requestAnimationFrame.query.db
+  });
+
+  connection.connect(function (err) {
+    if (err) {
+      res.status(418).send("Could not open connection!");
+    } else {
+      const createTableFile = `CREATE TABLE FILE (cal_id INT AUTO_INCREMENT PRIMARY KEY, file_Name VARCHAR(60) NOT NULL, version INT NOT NULL, prod_id VARCHAR(256) NOT NULL)`;
+      const createTableEvent = ``;
+      const createTableAlarm = ``;
+    }
+  });
+  res.send();
 });
 
 app.listen(portNum);
