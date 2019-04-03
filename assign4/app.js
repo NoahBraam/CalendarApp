@@ -195,5 +195,17 @@ app.get('/createDBConnection', function (req, res) {
   });
 });
 
+app.get('/addAllFiles', function (req, res) {
+
+});
+
+app.get('/clearDatabase', function (req, res) {
+
+});
+
+app.get('/getDbStatus', function (req, res) {
+
+});
+
 app.listen(portNum);
 console.log('Running app at localhost: ' + portNum);
