@@ -161,7 +161,7 @@ app.get('/createDBConnection', function (req, res) {
     host: 'dursley.socs.uoguelph.ca',
     user: req.query.user,
     password: req.query.password,
-    database: requestAnimationFrame.query.db
+    database: req.query.db
   });
 
   connection.connect(function (err) {

@@ -148,6 +148,29 @@ $(document).ready(function() {
         $("#calEvtForm").trigger("reset");
     });
 
+    $("#loginForm").submit(function (e) {
+        e.preventDefault();
+        const userName = $("#userName").val();
+        const password = $("#pass").val();
+        const dbName = $("#dbname").val();
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: '/createDBConnection',
+            data: {
+                user: userName,
+                password: password,
+                db: dbName
+            },
+            success: function(data) {
+                $("#loginForm").css("display","none");
+            },
+            error: function(err) {
+                console.log(err.responseText);
+            }
+        });
+    });
+
 });
 
 function scroll() {

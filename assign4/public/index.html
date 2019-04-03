@@ -131,6 +131,30 @@
             <p><button id="createEvtBtn" type="submit" class="btn btn-secondary" disabled="disabled">Create Event</button></p>
         </section>
     </form>
+    <form id="loginForm">
+        <p>
+            <label for="userName">
+                <span>User Name: </span>
+                <strong><abbr title="Required">*</abbr></strong>
+            </label>
+            <input type="text" id="userName" name="userName" placeholder="user_name" required>
+        </p>
+        <p>
+            <label for="pass">
+                <span>Password: </span>
+                <strong><abbr title="Required">*</abbr></strong>
+            </label>
+            <input type="password" id="pass" name="password" required>
+        </p>
+        <p>
+            <label for="dbname">
+                <span>Database Name: </span>
+                <strong><abbr title="Required">*</abbr></strong>
+            </label>
+            <input type="text" id="dbname" name="databaseName" placeholder="db_name" required>
+        </p>
+        <p><button id="submitLogin" type="submit" class="btn btn-secondary">Login</button></p>
+    </form>
     <!-- Leave me at the bottom of body -->
     <script src="/index.js"></script>
 </body>
