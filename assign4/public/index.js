@@ -202,14 +202,16 @@ $(document).ready(function() {
         });
     });
 
-    $("#deleteData").on("click", function(e) {
+    $("#getStatus").on("click", function(e) {
         e.preventDefault();
         $.ajax({
             type: 'get',
             dataType: 'json',
             url: '/getDbStatus',
             success: function(data) {
-                console.log(data);
+                var tmpVal = $("#statuspanel").val();
+                $("#statuspanel").val(tmpVal + `Database has ${data.numFiles} files, ${data.numEvents} events and ${data.numAlarms} alarms.\r\n`);
+                scroll();
             },
             error: function(err) {
 

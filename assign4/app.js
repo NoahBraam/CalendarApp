@@ -273,7 +273,37 @@ app.get('/clearDatabase', function (req, res) {
 });
 
 app.get('/getDbStatus', function (req, res) {
-
+  var numFiles, numEvents, numAlarms;
+  var queryString = `SELECT COUNT(*) AS NUM_FILES from FILE`;
+  connection.query(queryString, function(err, rows, fields) {
+    if (err) {
+      console.log(err);
+    } else {
+      numFiles = rows[0].NUM_FILES;
+      queryString = `SELECT COUNT(*) AS NUM_EVENTS from EVENT`;
+      connection.query(queryString, function(err, rows, fields) {
+        if (err) {
+          console.log(err);
+        } else {
+          numEvents = rows[0].NUM_EVENTS;
+          queryString = `SELECT COUNT(*) AS NUM_ALARMS from ALARM`;
+          connection.query(queryString, function(err, rows, fields) {
+            if (err) {
+              console.log(err);
+            } else {
+              numAlarms = rows[0].NUM_ALARMS;
+              var data = {
+                numFiles: numFiles,
+                numEvents: numEvents,
+                numAlarms, numAlarms
+              }
+              res.send(data);
+            }
+          });
+        }
+      });
+    }
+  });  
 });
 
 app.listen(portNum);
