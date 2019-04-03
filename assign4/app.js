@@ -196,11 +196,39 @@ app.get('/createDBConnection', function (req, res) {
 });
 
 app.get('/addAllFiles', function (req, res) {
-
+  var queryString = `SELECT file_Name FROM FILE`;
+    connection.query(queryString, function (err, rows, fields) {
+      if (err) {
+        console.log("Error! " + err);
+      } else {
+        fs.readdirSync('./uploads/').forEach(file => {
+          if (!rows.some( row => row.file_Name == file)) {
+            // insert stuff to the tables
+            console.log("this worked somehow");
+          }
+        });
+      }
+    });
 });
 
 app.get('/clearDatabase', function (req, res) {
-
+  const queryString = `DELETE FROM ALARM`;
+  connection.query(queryString, function(err, rows, fields) {
+    if (err) {
+      console.log("error! " + err);
+    }
+    connection.query('DELETE FROM EVENT', function(err, rows, fields) {
+      if (err) {
+        console.log("error! " + err);
+      }
+      connection.query("DELETE FROM FILE", function (err, rows, fields) {
+        if (err) {
+          console.log(err);
+        }
+      })
+    })
+  });
+  res.send();
 });
 
 app.get('/getDbStatus', function (req, res) {

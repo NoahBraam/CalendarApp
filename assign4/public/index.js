@@ -172,6 +172,21 @@ $(document).ready(function() {
         $(this).hide();
     });
 
+    $("#addAllFiles").on("click", function(e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: '/addAllFiles',
+            success: function(data) {
+                console.log("done");
+            },
+            error: function(err) {
+
+            }
+        });
+    });
+
 });
 
 function scroll() {
