@@ -189,7 +189,9 @@ app.get('/createDBConnection', function (req, res) {
       });
     }
   });
-  res.send();
+  res.send({
+    text: "I did it"
+  });
 });
 
 app.listen(portNum);

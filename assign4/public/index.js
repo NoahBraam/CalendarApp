@@ -163,7 +163,7 @@ $(document).ready(function() {
                 db: dbName
             },
             success: function(data) {
-                $("#loginForm").css("display","none");
+                console.log(data.text);
             },
             error: function(err) {
                 console.log(err.responseText);
