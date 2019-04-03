@@ -163,7 +163,7 @@ $(document).ready(function() {
                 db: dbName
             },
             success: function(data) {
-                console.log(data.text);
+                getDBStatus();
             },
             error: function(err) {
                 console.log(err.responseText);
@@ -179,12 +179,13 @@ $(document).ready(function() {
             dataType: 'json',
             url: '/addAllFiles',
             success: function(data) {
-                console.log("done");
+                getDBStatus();
             },
             error: function(err) {
 
             }
         });
+        getDBStatus();
     });
 
     $("#deleteData").on("click", function(e) {
@@ -194,29 +195,18 @@ $(document).ready(function() {
             dataType: 'json',
             url: '/clearDatabase',
             success: function(data) {
-                console.log("done");
+                getDBStatus();
             },
             error: function(err) {
 
             }
         });
+        getDBStatus();
     });
 
     $("#getStatus").on("click", function(e) {
         e.preventDefault();
-        $.ajax({
-            type: 'get',
-            dataType: 'json',
-            url: '/getDbStatus',
-            success: function(data) {
-                var tmpVal = $("#statuspanel").val();
-                $("#statuspanel").val(tmpVal + `Database has ${data.numFiles} files, ${data.numEvents} events and ${data.numAlarms} alarms.\r\n`);
-                scroll();
-            },
-            error: function(err) {
-
-            }
-        });
+        getDBStatus();
     });
 
 });
@@ -371,6 +361,21 @@ function updateCalView() {
         fail: function (error) {
             // Non-200 return, do something with error
             console.log(error);
+        }
+    });
+}
+
+function getDBStatus() {
+    $.ajax({
+        type: 'get',
+        dataType: 'json',
+        url: '/getDbStatus',
+        success: function(data) {
+            var tmpVal = $("#statuspanel").val();
+            $("#statuspanel").val(tmpVal + `Database has ${data.numFiles} files, ${data.numEvents} events and ${data.numAlarms} alarms.\r\n`);
+            scroll();
+        },
+        error: function(err) {
         }
     });
 }

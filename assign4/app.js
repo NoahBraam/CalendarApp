@@ -235,7 +235,7 @@ app.get('/addAllFiles', function (req, res) {
                           if (err) {
                             console.log("Error adding alarm! " + err);
                           } else {
-                            console.log("added alarm");
+                            res.send();
                           }
                         });
                       }
@@ -267,6 +267,7 @@ app.get('/clearDatabase', function (req, res) {
         if (err) {
           console.log(err);
         }
+        res.send();
       })
     })
   });
