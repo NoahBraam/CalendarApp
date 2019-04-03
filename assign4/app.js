@@ -170,7 +170,7 @@ app.get('/createDBConnection', function (req, res) {
       //res.status(418).send("Could not open connection!");
     } else {
       const createTableFile = `CREATE TABLE FILE (cal_id INT AUTO_INCREMENT PRIMARY KEY, file_Name VARCHAR(60) NOT NULL, version INT NOT NULL, prod_id VARCHAR(256) NOT NULL)`;
-      const createTableEvent = `CREATE TABLE EVENT(event_id INT AUTO_INCREMENT PRIMARY KEY, summary VARCHAR(1024), start_time DATETIME NOT NULL, location VARCHAR(60), organizer CARCHAR(256), cal_file INT NOT NULL, FOREIGN KEY(cal_file) REFERENCES FILE(cal_id) ON DELETE CASCADE)`;
+      const createTableEvent = `CREATE TABLE EVENT(event_id INT AUTO_INCREMENT PRIMARY KEY, summary VARCHAR(1024), start_time DATETIME NOT NULL, location VARCHAR(60), organizer VARCHAR(256), cal_file INT NOT NULL, FOREIGN KEY(cal_file) REFERENCES FILE(cal_id) ON DELETE CASCADE)`;
       const createTableAlarm = "CREATE TABLE ALARM(alarm_id INT AUTO_INCREMENT PRIMARY KEY, action VARCHAR(256) NOT NULL, `trigger` VARCHAR(256) NOT NULL, event INT NOT NULL, FOREIGN KEY(event) REFERENCES EVENT(event_id) ON DELETE CASCADE)";
 
       connection.query(createTableFile, function (err, rows, fields) {
@@ -204,7 +204,24 @@ app.get('/addAllFiles', function (req, res) {
         fs.readdirSync('./uploads/').forEach(file => {
           if (!rows.some( row => row.file_Name == file)) {
             // insert stuff to the tables
-            console.log("this worked somehow");
+            var calJSON = libcal.parseCalReturnJSON(path.join(__dirname+'/uploads/' + file));
+            var cal = JSON.parse(calJSON);
+            queryString = `INSERT INTO FILE (file_Name, version, prod_id) VALUES ('${file}',${cal.version},'${cal.prodID}')`;
+            connection.query(queryString, function(err, rows, fields) {
+              if (err) {
+                console.log("error! " + err);
+              } else {
+                const newCalNum = rows.insertId;
+                var evtJSON = libcal.parseCalReturnEvents(path.join(__dirname+'/uploads/' + req.query.filename));
+                var evts = JSON.parse(evtJSON);
+                for (let i = 0; i< evts.length; i++) {
+                  var curDT = evts[i].startDT.date;
+                  queryString = `INSERT INT EVENT (summary, start_time, location, organizer, cal_file) VALUES ('${evts[i].summary}',${curDT},'${evts[i].location}','${evts[i].organizer}',${newCalNum})`;
+                }
+              }
+            })
+          } else {
+            console.log("nothing to add");
           }
         });
       }

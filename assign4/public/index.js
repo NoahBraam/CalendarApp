@@ -187,6 +187,21 @@ $(document).ready(function() {
         });
     });
 
+    $("#deleteData").on("click", function(e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: '/clearDatabase',
+            success: function(data) {
+                console.log("done");
+            },
+            error: function(err) {
+
+            }
+        });
+    });
+
 });
 
 function scroll() {
