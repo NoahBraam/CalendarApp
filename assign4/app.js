@@ -166,7 +166,8 @@ app.get('/createDBConnection', function (req, res) {
 
   connection.connect(function (err) {
     if (err) {
-      res.status(418).send("Could not open connection!");
+      res.send();
+      //res.status(418).send("Could not open connection!");
     } else {
       const createTableFile = `CREATE TABLE FILE (cal_id INT AUTO_INCREMENT PRIMARY KEY, file_Name VARCHAR(60) NOT NULL, version INT NOT NULL, prod_id VARCHAR(256) NOT NULL)`;
       const createTableEvent = `CREATE TABLE EVENT(event_id INT AUTO_INCREMENT PRIMARY KEY, summary VARCHAR(1024), start_time DATETIME NOT NULL, location VARCHAR(60), organizer CARCHAR(256), cal_file INT NOT NULL, FOREIGN KEY(cal_file) REFERENCES FILE(cal_id) ON DELETE CASCADE)`;

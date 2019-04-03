@@ -169,6 +169,7 @@ $(document).ready(function() {
                 console.log(err.responseText);
             }
         });
+        $(this).hide();
     });
 
 });
