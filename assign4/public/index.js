@@ -202,6 +202,21 @@ $(document).ready(function() {
         });
     });
 
+    $("#deleteData").on("click", function(e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: '/getDbStatus',
+            success: function(data) {
+                console.log(data);
+            },
+            error: function(err) {
+
+            }
+        });
+    });
+
 });
 
 function scroll() {

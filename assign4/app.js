@@ -211,12 +211,37 @@ app.get('/addAllFiles', function (req, res) {
               if (err) {
                 console.log("error! " + err);
               } else {
-                const newCalNum = rows.insertId;
-                var evtJSON = libcal.parseCalReturnEvents(path.join(__dirname+'/uploads/' + req.query.filename));
+                console.log("Added File");
+                var newCalNum = rows.insertId;
+                var evtJSON = libcal.parseCalReturnEvents(path.join(__dirname+'/uploads/' + file));
                 var evts = JSON.parse(evtJSON);
                 for (let i = 0; i< evts.length; i++) {
-                  var curDT = evts[i].startDT.date;
-                  queryString = `INSERT INT EVENT (summary, start_time, location, organizer, cal_file) VALUES ('${evts[i].summary}',${curDT},'${evts[i].location}','${evts[i].organizer}',${newCalNum})`;
+                  var datStr = evts[i].startDT.date;
+                  var timeStr = evts[i].startDT.time;
+                  var summaryStr = (evts[i].summary == "") ? 'NULL' : evts[i].summary;
+                  var locationStr = (evts[i].location == "") ? 'NULL' : evts[i].location;
+                  var organizerStr = (evts[i].organizer == "") ? 'NULL' : evts[i].organizer;
+                  queryString = `INSERT INTO EVENT (summary, start_time, location, organizer, cal_file) VALUES ('${summaryStr}','${datStr.substring(0,4)}-${datStr.substring(4,6)}-${datStr.substring(6)} ${timeStr.substring(0,2)}:${timeStr.substring(2,4)}:${timeStr.substring(4)}','${locationStr}','${organizerStr}',${newCalNum})`;
+                  connection.query(queryString, function(err, rows, fields) {
+                    if (err) {
+                      console.log("Error adding event! " + err);
+                    } else {
+                      var newEvtNum = rows.insertId;
+                      var almJSON = libcal.getAlarmListOfEvent(path.join(__dirname+'/uploads/' + file), i+1);
+                      var alms = JSON.parse(almJSON);
+                      for (let j = 0; j<alms.length; j++) {
+                        queryString = `INSERT INTO ALARM (action, \`trigger\`, event) VALUES ('${alms[j].action}','${alms[j].trigger}',${newEvtNum})`;
+                        connection.query(queryString, function(err, rows, fields) {
+                          if (err) {
+                            console.log("Error adding alarm! " + err);
+                          } else {
+                            console.log("added alarm");
+                          }
+                        });
+                      }
+                      
+                    }
+                  });
                 }
               }
             })
@@ -245,7 +270,6 @@ app.get('/clearDatabase', function (req, res) {
       })
     })
   });
-  res.send();
 });
 
 app.get('/getDbStatus', function (req, res) {
