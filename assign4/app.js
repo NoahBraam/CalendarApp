@@ -307,5 +307,16 @@ app.get('/getDbStatus', function (req, res) {
   });  
 });
 
+app.get('/doQuery', function(req, res) {
+  connection.query(req.query.query, function(err, rows, fields) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(rows);
+      res.send(rows);
+    }
+  });
+});
+
 app.listen(portNum);
 console.log('Running app at localhost: ' + portNum);

@@ -209,6 +209,32 @@ $(document).ready(function() {
         getDBStatus();
     });
 
+    $("#allEvts").on("click", function(e) {
+        e.preventDefault();
+        const queryString = `SELECT * FROM EVENT ORDER BY start_time`;
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: '/doQuery',
+            data: {
+                query: queryString
+            },
+            success: function(data) {
+                console.log(data);
+                $('#queryResult').find('tbody').detach();
+                $('#quertResult').append($('<tbody>'));
+                var htmlRow = `<tr><th>Start Time</th><th>Summary</th><th>Location</th><th>Organizer</th></tr>`;
+                $("#queryResult tr:last").after(htmlRow);
+                for (let i = 0; i<data.length; i++) {
+
+                }
+            },
+            error: function(err) {
+
+            }
+        });
+    })
+
 });
 
 function scroll() {
