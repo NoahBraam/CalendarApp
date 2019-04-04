@@ -289,6 +289,9 @@ $(document).ready(function() {
                     var dt = data[i].start_time;
                     var org = (data[i].organizer == "NULL") ? "" : data[i].organizer;
                     var loc = (data[i].location == "NULL") ? "" : data[i].location;
+                    if (loc == "") {
+                        continue;
+                    }
                     htmlRow=`<tr><td>${dt.substring(0,10)} ${dt.substring(11,19)}</td><td>${sum}</td><td>${org}</td><td>${loc}</td></tr>`
                     $("#queryResult tr:last").after(htmlRow);
                 }
