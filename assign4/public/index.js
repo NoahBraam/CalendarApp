@@ -274,6 +274,28 @@ $(document).ready(function() {
             }
         });
     });
+
+    $("#pastEvents").on("click", function(e) {
+        e.preventDefault();
+        const queryString = `select * from EVENT where start_time < (select CURRENT_TIMESTAMP)`;
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: '/doQuery',
+            data: {
+                query: queryString
+            },
+            success: function(data) {
+                console.log(data);
+                for (let i = 0; i<data.length; i++) {
+
+                }
+            },
+            error: function(err) {
+
+            }
+        });
+    });
     
     $("#selectFileQuery").on("change", function(e) {
         $("#evtForFile").removeAttr("disabled");
