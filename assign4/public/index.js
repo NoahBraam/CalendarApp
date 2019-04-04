@@ -334,7 +334,6 @@ $(document).ready(function() {
     
     $("#selectFileQuery").on("change", function(e) {
         $("#evtForFile").removeAttr("disabled");
-        $("#allAlarms").removeAttr("disabled");
     });
 
     $("#evtForFile").on("click", function(e) {
@@ -368,8 +367,7 @@ $(document).ready(function() {
 
     $("#allAlarms").on("click", function(e) {
         e.preventDefault();
-        var file = $("#selectFileQuery").val();
-        const queryString = `select * from ALARM where event = (select event_id from EVENT where cal_file = (select cal_id from FILE where file_Name = '${file}'))`;
+        const queryString = `select * from ALARM where \`trigger\` in (select \`trigger\` from ALARM group by \`trigger\` having count(*) > 1) ORDER BY \`trigger\``;
         $.ajax({
             type: 'get',
             dataType: 'json',
