@@ -753,27 +753,59 @@ char* eventToJSON(const Event* event) {
     int numProps = 3 + getLength(event->properties);
     int numAlarms = getLength(event->alarms);
     char* dtString = dtToJSON(event->startDateTime);
+    char* sumStr, *locStr, *orgStr;
     Property* tempProp = malloc(sizeof(Property));
     strcpy(tempProp->propName, "SUMMARY");
     void* tempSum = NULL;
+    void* tempLoc = NULL;
+    void* tempOrg = NULL;
     if (numProps > 3) {
       tempSum = findElement(event->properties, &comparePropertiesByName, tempProp);
+      strcpy(tempProp->propName, "LOCATION");
+      tempLoc = findElement(event->properties, &comparePropertiesByName, tempProp);
+      strcpy(tempProp->propName, "ORGANIZER");
+      tempOrg = findElement(event->properties, &comparePropertiesByName, tempProp);
     }
     free(tempProp);
     tempProp = NULL;
+    // if (tempSum != NULL) {
+    //   tempProp = (Property*)tempSum;
+    // }
     if (tempSum != NULL) {
       tempProp = (Property*)tempSum;
-    }
-    if (tempProp != NULL) {
-      int len = 11 + strlen(dtString) + 43 + strlen(tempProp->propDescr);
-      evtString = malloc(sizeof(char) * len);
-      snprintf(evtString, len, "{\"startDT\":%s,\"numProps\":%d,\"numAlarms\":%d,\"summary\":\"%s\"}", dtString, numProps, numAlarms, tempProp->propDescr);
+      sumStr = malloc(sizeof(char) * strlen(tempProp->propDescr) + 1);
+      strcpy(sumStr, tempProp->propDescr);
     } else {
-      int len = 11 + strlen(dtString) + 43;
-      evtString = malloc(sizeof(char) * len);
-      snprintf(evtString, len, "{\"startDT\":%s,\"numProps\":%d,\"numAlarms\":%d,\"summary\":\"\"}", dtString, numProps, numAlarms);
+      sumStr = malloc(sizeof(char) * 3);
+      strcpy(sumStr, "");
     }
+
+    if (tempLoc != NULL) {
+      tempProp = (Property*)tempLoc;
+      locStr = malloc(sizeof(char) * strlen(tempProp->propDescr) + 1);
+      strcpy(locStr, tempProp->propDescr);
+    } else {
+      locStr = malloc(sizeof(char) * 3);
+      strcpy(locStr, "");
+    }
+
+    if (tempOrg != NULL) {
+      tempProp = (Property*)tempOrg;
+      orgStr = malloc(sizeof(char) * strlen(tempProp->propDescr) + 1);
+      strcpy(orgStr, tempProp->propDescr);
+    } else {
+      orgStr = malloc(sizeof(char) * 3);
+      strcpy(orgStr, "");
+    }
+
+    
+    int len = 11 + strlen(dtString) + 100 + strlen(sumStr) + strlen(locStr) + strlen(orgStr);
+    evtString = malloc(sizeof(char) * len);
+    snprintf(evtString, len, "{\"startDT\":%s,\"numProps\":%d,\"numAlarms\":%d,\"summary\":\"%s\", \"location\":\"%s\",\"organizer\":\"%s\"}", dtString, numProps, numAlarms, sumStr, locStr, orgStr);
     free(dtString);
+    free(sumStr);
+    free(locStr);
+    free(orgStr);
   }
   return evtString;
 }

@@ -105,6 +105,7 @@ app.get('/parsefileReturnCal', function(req, res) {
 
 app.get('/getEventList', function (req, res) {
   var evtJSON = libcal.parseCalReturnEvents(path.join(__dirname+'/uploads/' + req.query.filename));
+  console.log(evtJSON);
   var json = JSON.parse(evtJSON);
   res.send(json);
 });
@@ -234,7 +235,7 @@ app.get('/addAllFiles', function (req, res) {
                           if (err) {
                             console.log("Error adding alarm! " + err);
                           } else {
-                            res.send({code: "OK"});
+                            //res.send({code: "OK"});
                           }
                         });
                       }
@@ -266,7 +267,7 @@ app.get('/clearDatabase', function (req, res) {
         if (err) {
           console.log(err);
         }
-        res.send({code: "OK"});
+        //res.send({code: "OK"});
       })
     })
   });

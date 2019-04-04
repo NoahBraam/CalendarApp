@@ -229,10 +229,10 @@ $(document).ready(function() {
                 var htmlRow = `<tr><th>Start Time</th><th>Summary</th><th>Organizer</th><th>Location</th></tr>`;
                 $("#queryResult tr:last").after(htmlRow);
                 for (let i = 0; i<data.length; i++) {
-                    var sum = data[i].summary;
+                    var sum = (data[i].summary == "NULL") ? "" : data[i].summary;
                     var dt = data[i].start_time;
-                    var org = data[i].organizer;
-                    var loc = data[i].location;
+                    var org = (data[i].organizer == "NULL") ? "" : data[i].organizer;
+                    var loc = (data[i].location == "NULL") ? "" : data[i].location;
                     htmlRow=`<tr><td>${dt.substring(0,10)} ${dt.substring(11,19)}</td><td>${sum}</td><td>${org}</td><td>${loc}</td></tr>`
                     $("#queryResult tr:last").after(htmlRow);
                 }
@@ -259,9 +259,9 @@ $(document).ready(function() {
                 var htmlRow = `<tr><th>Start Time</th><th>Summary</th><th>Organizer</th></tr>`;
                 $("#queryResult tr:last").after(htmlRow);
                 for (let i = 0; i<data.length; i++) {
-                    var sum = data[i].summary;
+                    var sum = (data[i].summary == "NULL") ? "" : data[i].summary;
                     var dt = data[i].start_time;
-                    var org = data[i].organizer;
+                    var org = (data[i].organizer == "NULL") ? "" : data[i].organizer;
                     htmlRow=`<tr><td>${dt.substring(0,10)} ${dt.substring(11,19)}</td><td>${sum}</td><td>${org}</td></tr>`; 
                     $("#queryResult tr:last").after(htmlRow);
                 }
@@ -288,10 +288,10 @@ $(document).ready(function() {
                 var htmlRow = `<tr><th>Start Time</th><th>Summary</th><th>Organizer</th><th>Location</th></tr>`;
                 $("#queryResult tr:last").after(htmlRow);
                 for (let i = 0; i<data.length; i++) {
-                    var sum = data[i].summary;
+                    var sum = (data[i].summary == "NULL") ? "" : data[i].summary;
                     var dt = data[i].start_time;
-                    var org = data[i].organizer;
-                    var loc = data[i].location;
+                    var org = (data[i].organizer == "NULL") ? "" : data[i].organizer;
+                    var loc = (data[i].location == "NULL") ? "" : data[i].location;
                     htmlRow=`<tr><td>${dt.substring(0,10)} ${dt.substring(11,19)}</td><td>${sum}</td><td>${org}</td><td>${loc}</td></tr>`
                     $("#queryResult tr:last").after(htmlRow);
                 }
@@ -318,10 +318,10 @@ $(document).ready(function() {
                 var htmlRow = `<tr><th>Start Time</th><th>Summary</th><th>Organizer</th><th>Location</th></tr>`;
                 $("#queryResult tr:last").after(htmlRow);
                 for (let i = 0; i<data.length; i++) {
-                    var sum = data[i].summary;
+                    var sum = (data[i].summary == "NULL") ? "" : data[i].summary;
                     var dt = data[i].start_time;
-                    var org = data[i].organizer;
-                    var loc = data[i].location;
+                    var org = (data[i].organizer == "NULL") ? "" : data[i].organizer;
+                    var loc = (data[i].location == "NULL") ? "" : data[i].location;
                     htmlRow=`<tr><td>${dt.substring(0,10)} ${dt.substring(11,19)}</td><td>${sum}</td><td>${org}</td><td>${loc}</td></tr>`
                     $("#queryResult tr:last").after(htmlRow);
                 }
@@ -354,7 +354,7 @@ $(document).ready(function() {
                 var htmlRow = `<tr><th>Start Time</th><th>Summary</th></tr>`;
                 $("#queryResult tr:last").after(htmlRow);
                 for (let i = 0; i<data.length; i++) {
-                    var sum = data[i].summary;
+                    var sum = (data[i].summary == "NULL") ? "" : data[i].summary;
                     var dt = data[i].start_time;
                     htmlRow=`<tr><td>${dt.substring(0,10)} ${dt.substring(11,19)}</td><td>${sum}</td></tr>`; 
                     $("#queryResult tr:last").after(htmlRow);
