@@ -166,7 +166,8 @@ app.get('/createDBConnection', function (req, res) {
 
   connection.connect(function (err) {
     if (err) {
-      res.send();
+      console.log(err);
+      res.send(err);
       //res.status(418).send("Could not open connection!");
     } else {
       const createTableFile = `CREATE TABLE FILE (cal_id INT AUTO_INCREMENT PRIMARY KEY, file_Name VARCHAR(60) NOT NULL, version INT NOT NULL, prod_id VARCHAR(256) NOT NULL)`;
@@ -177,21 +178,19 @@ app.get('/createDBConnection', function (req, res) {
         if (err) {
           console.log("Did not create FILE table");
         }
-      });
-      connection.query(createTableEvent, function (err, rows, fields) {
-        if (err) {
-          console.log("Did not create EVENT table");
-        }
-      });
-      connection.query(createTableAlarm, function (err, rows, fields) {
-        if (err) {
-          console.log("Did not create ALARM table");
-        }
+        connection.query(createTableEvent, function (err, rows, fields) {
+          if (err) {
+            console.log("Did not create EVENT table");
+          }
+          connection.query(createTableAlarm, function (err, rows, fields) {
+            if (err) {
+              console.log("Did not create ALARM table");
+            }
+            res.send({code: "OK"});
+          });
+        });
       });
     }
-  });
-  res.send({
-    text: "I did it"
   });
 });
 
@@ -235,7 +234,7 @@ app.get('/addAllFiles', function (req, res) {
                           if (err) {
                             console.log("Error adding alarm! " + err);
                           } else {
-                            res.send();
+                            res.send({code: "OK"});
                           }
                         });
                       }
@@ -267,7 +266,7 @@ app.get('/clearDatabase', function (req, res) {
         if (err) {
           console.log(err);
         }
-        res.send();
+        res.send({code: "OK"});
       })
     })
   });

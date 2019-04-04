@@ -162,14 +162,18 @@ $(document).ready(function() {
                 password: password,
                 db: dbName
             },
-            success: function(data) {
-                getDBStatus();
+            success: function(dt) {
+                console.log(dt)
+                if (dt.code === "OK") {
+                    hideLoginShowDB();
+                    getDBStatus();
+                }
             },
             error: function(err) {
                 console.log(err.responseText);
             }
         });
-        $(this).hide();
+        //$(this).hide();
     });
 
     $("#addAllFiles").on("click", function(e) {
@@ -221,8 +225,16 @@ $(document).ready(function() {
             },
             success: function(data) {
                 console.log(data);
+                $("#queryResult").find("tr:gt(0)").remove();
+                var htmlRow = `<tr><th>Start Time</th><th>Summary</th><th>Organizer</th><th>Location</th></tr>`;
+                $("#queryResult tr:last").after(htmlRow);
                 for (let i = 0; i<data.length; i++) {
-
+                    var sum = data[i].summary;
+                    var dt = data[i].start_time;
+                    var org = data[i].organizer;
+                    var loc = data[i].location;
+                    htmlRow=`<tr><td>${dt.substring(0,10)} ${dt.substring(11,19)}</td><td>${sum}</td><td>${org}</td><td>${loc}</td></tr>`
+                    $("#queryResult tr:last").after(htmlRow);
                 }
             },
             error: function(err) {
@@ -233,7 +245,7 @@ $(document).ready(function() {
 
     $("#overLap").on("click", function(e) {
         e.preventDefault();
-        const queryString = `select * from EVENT where start_time in (select start_time from EVENT group by start_time having count(*) > 1)`;
+        const queryString = `select start_time, summary, organizer from EVENT where start_time in (select start_time from EVENT group by start_time having count(*) > 1)`;
         $.ajax({
             type: 'get',
             dataType: 'json',
@@ -243,8 +255,15 @@ $(document).ready(function() {
             },
             success: function(data) {
                 console.log(data);
+                $("#queryResult").find("tr:gt(0)").remove();
+                var htmlRow = `<tr><th>Start Time</th><th>Summary</th><th>Organizer</th></tr>`;
+                $("#queryResult tr:last").after(htmlRow);
                 for (let i = 0; i<data.length; i++) {
-
+                    var sum = data[i].summary;
+                    var dt = data[i].start_time;
+                    var org = data[i].organizer;
+                    htmlRow=`<tr><td>${dt.substring(0,10)} ${dt.substring(11,19)}</td><td>${sum}</td><td>${org}</td></tr>`; 
+                    $("#queryResult tr:last").after(htmlRow);
                 }
             },
             error: function(err) {
@@ -265,8 +284,16 @@ $(document).ready(function() {
             },
             success: function(data) {
                 console.log(data);
+                $("#queryResult").find("tr:gt(0)").remove();
+                var htmlRow = `<tr><th>Start Time</th><th>Summary</th><th>Organizer</th><th>Location</th></tr>`;
+                $("#queryResult tr:last").after(htmlRow);
                 for (let i = 0; i<data.length; i++) {
-
+                    var sum = data[i].summary;
+                    var dt = data[i].start_time;
+                    var org = data[i].organizer;
+                    var loc = data[i].location;
+                    htmlRow=`<tr><td>${dt.substring(0,10)} ${dt.substring(11,19)}</td><td>${sum}</td><td>${org}</td><td>${loc}</td></tr>`
+                    $("#queryResult tr:last").after(htmlRow);
                 }
             },
             error: function(err) {
@@ -287,8 +314,16 @@ $(document).ready(function() {
             },
             success: function(data) {
                 console.log(data);
+                $("#queryResult").find("tr:gt(0)").remove();
+                var htmlRow = `<tr><th>Start Time</th><th>Summary</th><th>Organizer</th><th>Location</th></tr>`;
+                $("#queryResult tr:last").after(htmlRow);
                 for (let i = 0; i<data.length; i++) {
-
+                    var sum = data[i].summary;
+                    var dt = data[i].start_time;
+                    var org = data[i].organizer;
+                    var loc = data[i].location;
+                    htmlRow=`<tr><td>${dt.substring(0,10)} ${dt.substring(11,19)}</td><td>${sum}</td><td>${org}</td><td>${loc}</td></tr>`
+                    $("#queryResult tr:last").after(htmlRow);
                 }
             },
             error: function(err) {
@@ -299,12 +334,13 @@ $(document).ready(function() {
     
     $("#selectFileQuery").on("change", function(e) {
         $("#evtForFile").removeAttr("disabled");
+        $("#allAlarms").removeAttr("disabled");
     });
 
     $("#evtForFile").on("click", function(e) {
         e.preventDefault();
         var file = $("#selectFileQuery").val();
-        const queryString = `select * from EVENT where cal_file = (select cal_id from FILE where file_Name = '${file}')`;
+        const queryString = `select start_time, summary from EVENT where cal_file = (select cal_id from FILE where file_Name = '${file}')`;
         $.ajax({
             type: 'get',
             dataType: 'json',
@@ -314,8 +350,14 @@ $(document).ready(function() {
             },
             success: function(data) {
                 console.log(data);
+                $("#queryResult").find("tr:gt(0)").remove();
+                var htmlRow = `<tr><th>Start Time</th><th>Summary</th></tr>`;
+                $("#queryResult tr:last").after(htmlRow);
                 for (let i = 0; i<data.length; i++) {
-
+                    var sum = data[i].summary;
+                    var dt = data[i].start_time;
+                    htmlRow=`<tr><td>${dt.substring(0,10)} ${dt.substring(11,19)}</td><td>${sum}</td></tr>`; 
+                    $("#queryResult tr:last").after(htmlRow);
                 }
             },
             error: function(err) {
@@ -337,8 +379,14 @@ $(document).ready(function() {
             },
             success: function(data) {
                 console.log(data);
+                $("#queryResult").find("tr:gt(0)").remove();
+                var htmlRow = `<tr><th>Action</th><th>Trigger</th></tr>`;
+                $("#queryResult tr:last").after(htmlRow);
                 for (let i = 0; i<data.length; i++) {
-
+                    var act = data[i].action;
+                    var trig = data[i].trigger;
+                    htmlRow=`<tr><td>${act}</td><td>${trig}</td></tr>`;
+                    $("#queryResult tr:last").after(htmlRow);
                 }
             },
             error: function(err) {
@@ -519,4 +567,9 @@ function getDBStatus() {
         error: function(err) {
         }
     });
+}
+
+function hideLoginShowDB() {
+    $("#loginForm").hide();
+    $("#dbStuff").removeAttr("hidden");
 }

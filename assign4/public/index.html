@@ -131,6 +131,7 @@
             <p><button id="createEvtBtn" type="submit" class="btn btn-secondary" disabled="disabled">Create Event</button></p>
         </section>
     </form>
+    <hr>
     <form id="loginForm">
         <h3>DB Login</h3>
         <p>
@@ -156,30 +157,31 @@
         </p>
         <p><button id="submitLogin" type="submit" class="btn btn-secondary">Login</button></p>
     </form>
+    <div id="dbStuff" hidden>
     <p>
         <button id="addAllFiles" type="submit" class="btn btn-secondary">Add Files</button>
         <button id="deleteData" type="submit" class="btn btn-secondary">Clear Data</button>
         <button id="getStatus" type="submit" class="btn btn-secondary">DB Status</button>
     </p>
     <p>
-        <h2>Query Results</h2>
-        <select id="selectFileQuery" name="selectFileQuery">
-                <option value="" disabled selected>Select file</option>
-            </select>
-        <table id="queryResult" width="80%">
-            <tbody>
-                <tr>No query performed!</tr>
-            </tbody>
-        </table>
-    </p>
+    <select id="selectFileQuery" name="selectFileQuery">
+        <option value="" disabled selected>Select file</option>
+    </select>
+    <p></p>
+    <table id="queryResult" width="80%">
+        <tr><th>Results!</th></tr>
+        <tr><td>No query performed!</td></tr> 
+    </table>
+    
     <p>
         <button id="allEvts" type="submit" class="btn btn-secondary">Get all Events</button>
         <button id="evtForFile" type="submit" class="btn btn-secondary" disabled>Get Events for File</button>
         <button id="overLap" type="submit" class="btn btn-secondary">Overlap Events</button>
         <button id="samePlace" type="submit" class="btn btn-secondary">Events in Same Location</button>
         <button id="pastEvents" type="submit" class="btn btn-secondary">Past Events</button>
-        <button id="allAlarms" type="submit" class="btn btn-secondary">Get Alarms for File</button>
+        <button id="allAlarms" type="submit" class="btn btn-secondary" disabled>Get Alarms for File</button>
     </p>
+    </div>
     <!-- Leave me at the bottom of body -->
     <script src="/index.js"></script>
 </body>
