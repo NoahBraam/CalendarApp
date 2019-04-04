@@ -221,10 +221,6 @@ $(document).ready(function() {
             },
             success: function(data) {
                 console.log(data);
-                $('#queryResult').find('tbody').detach();
-                $('#quertResult').append($('<tbody>'));
-                var htmlRow = `<tr><th>Start Time</th><th>Summary</th><th>Location</th><th>Organizer</th></tr>`;
-                $("#queryResult tr:last").after(htmlRow);
                 for (let i = 0; i<data.length; i++) {
 
                 }
@@ -233,8 +229,56 @@ $(document).ready(function() {
 
             }
         });
-    })
+    });
 
+    $("#overLap").on("click", function(e) {
+        e.preventDefault();
+        const queryString = `select * from EVENT where start_time in (select start_time from EVENT group by start_time having count(*) > 1)`;
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: '/doQuery',
+            data: {
+                query: queryString
+            },
+            success: function(data) {
+                console.log(data);
+                for (let i = 0; i<data.length; i++) {
+
+                }
+            },
+            error: function(err) {
+
+            }
+        });
+    });
+    
+    $("#selectFileQuery").on("change", function(e) {
+        $("#evtForFile").removeAttr("disabled");
+    });
+
+    $("#evtForFile").on("click", function(e) {
+        e.preventDefault();
+        var file = $("#selectFileQuery").val();
+        const queryString = `select * from EVENT where cal_file = (select cal_id from FILE where file_Name = '${file}')`;
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: '/doQuery',
+            data: {
+                query: queryString
+            },
+            success: function(data) {
+                console.log(data);
+                for (let i = 0; i<data.length; i++) {
+
+                }
+            },
+            error: function(err) {
+
+            }
+        });
+    });
 });
 
 function scroll() {
@@ -267,6 +311,7 @@ function updateFileList() {
             } else {
                 $("#filelog").find("tr:gt(0)").remove();
                 $('#selectFile').children('option:not(:first)').remove();
+                $('#selectFileQuery').children('option:not(:first)').remove();
                 $('#createFileSelect').children('option:not(:first)').remove();
                 for (i = 0; i<data.numFiles; i++) {
                     if (data.files[i].endsWith(".ics")) {
@@ -279,6 +324,7 @@ function updateFileList() {
                             },
                             success: function(resp) {
                                 $("#selectFile").append(new Option(resp.filename, ""+resp.filename+""));
+                                $("#selectFileQuery").append(new Option(resp.filename, ""+resp.filename+""));
                                 $("#createFileSelect").append(new Option(resp.filename, ""+resp.filename+""));
                                 var htmlRow = `<tr><td><a href = "/uploads/${resp.filename}">${resp.filename}</a></td><td>${resp.version}</td><td>${resp.prodID}</td><td>${resp.numEvents}</td><td>${resp.numProps}</td></tr>`;
                                 $('#filelog tr:last').after(htmlRow);

@@ -163,6 +163,9 @@
     </p>
     <p>
         <h2>Query Results</h2>
+        <select id="selectFileQuery" name="selectFileQuery">
+                <option value="" disabled selected>Select file</option>
+            </select>
         <table id="queryResult" width="80%">
             <tbody>
                 <tr>No query performed!</tr>
@@ -171,6 +174,8 @@
     </p>
     <p>
         <button id="allEvts" type="submit" class="btn btn-secondary">Get all Events</button>
+        <button id="evtForFile" type="submit" class="btn btn-secondary" disabled>Get Events for File</button>
+        <button id="overLap" type="submit" class="btn btn-secondary">Overlap Events</button>
     </p>
     <!-- Leave me at the bottom of body -->
     <script src="/index.js"></script>
