@@ -279,6 +279,31 @@ $(document).ready(function() {
             }
         });
     });
+
+    $("#allAlarms").on("click", function(e) {
+        e.preventDefault();
+        var file = $("#selectFileQuery").val();
+        const queryString = `select * from ALARM where event = (select event_id from EVENT where cal_file = (select cal_id from FILE where file_Name = '${file}'))`;
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: '/doQuery',
+            data: {
+                query: queryString
+            },
+            success: function(data) {
+                console.log(data);
+                for (let i = 0; i<data.length; i++) {
+
+                }
+            },
+            error: function(err) {
+
+            }
+        });
+    });
+
+    
 });
 
 function scroll() {
