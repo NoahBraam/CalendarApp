@@ -211,7 +211,6 @@ app.get('/addAllFiles', function (req, res) {
               if (err) {
                 console.log("error! " + err);
               } else {
-                console.log("Added File");
                 var newCalNum = rows.insertId;
                 var evtJSON = libcal.parseCalReturnEvents(path.join(__dirname+'/uploads/' + file));
                 var evts = JSON.parse(evtJSON);
@@ -312,7 +311,6 @@ app.get('/doQuery', function(req, res) {
     if (err) {
       console.log(err);
     } else {
-      console.log(rows);
       res.send(rows);
     }
   });

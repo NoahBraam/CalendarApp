@@ -224,7 +224,6 @@ $(document).ready(function() {
                 query: queryString
             },
             success: function(data) {
-                console.log(data);
                 $("#queryResult").find("tr:gt(0)").remove();
                 var htmlRow = `<tr><th>Start Time</th><th>Summary</th><th>Organizer</th><th>Location</th></tr>`;
                 $("#queryResult tr:last").after(htmlRow);
@@ -254,7 +253,6 @@ $(document).ready(function() {
                 query: queryString
             },
             success: function(data) {
-                console.log(data);
                 $("#queryResult").find("tr:gt(0)").remove();
                 var htmlRow = `<tr><th>Start Time</th><th>Summary</th><th>Organizer</th></tr>`;
                 $("#queryResult tr:last").after(htmlRow);
@@ -283,7 +281,6 @@ $(document).ready(function() {
                 query: queryString
             },
             success: function(data) {
-                console.log(data);
                 $("#queryResult").find("tr:gt(0)").remove();
                 var htmlRow = `<tr><th>Start Time</th><th>Summary</th><th>Organizer</th><th>Location</th></tr>`;
                 $("#queryResult tr:last").after(htmlRow);
@@ -313,7 +310,6 @@ $(document).ready(function() {
                 query: queryString
             },
             success: function(data) {
-                console.log(data);
                 $("#queryResult").find("tr:gt(0)").remove();
                 var htmlRow = `<tr><th>Start Time</th><th>Summary</th><th>Organizer</th><th>Location</th></tr>`;
                 $("#queryResult tr:last").after(htmlRow);
@@ -348,7 +344,6 @@ $(document).ready(function() {
                 query: queryString
             },
             success: function(data) {
-                console.log(data);
                 $("#queryResult").find("tr:gt(0)").remove();
                 var htmlRow = `<tr><th>Start Time</th><th>Summary</th></tr>`;
                 $("#queryResult tr:last").after(htmlRow);
@@ -376,7 +371,6 @@ $(document).ready(function() {
                 query: queryString
             },
             success: function(data) {
-                console.log(data);
                 $("#queryResult").find("tr:gt(0)").remove();
                 var htmlRow = `<tr><th>Action</th><th>Trigger</th></tr>`;
                 $("#queryResult tr:last").after(htmlRow);
