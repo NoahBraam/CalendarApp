@@ -2,8 +2,7 @@
 
 This is my W19 CIS*2750 assignment
 
-## Notes
+## About
 
-* Lines end with CRLF
-* CRLF followed by a **single** white space character (ie a space or a tab) are interpreted as one line
-  - must ignore these CRLF chars (\r\n)
+This is a WebApp that allows you to create/modify iCalendar files.
+The backend .ics parser is made in C, and the web portion in written in JavaScript
